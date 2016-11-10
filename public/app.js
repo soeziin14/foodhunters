@@ -1,6 +1,21 @@
-var app = angular.module('app', ['ngResource', 'ngRoute', 'angularCSS', 'angular-jwt', 'ngCookies', 'toaster']);
+var app = angular.module('app', ['ngResource', 'ngRoute', 'angularCSS', 'angular-jwt', 'ngCookies', 'toaster', 'satellizer']);
 
-app.config(function($routeProvider, $locationProvider) {
+app.config(function($routeProvider, $authProvider) {
+
+    $authProvider.instagram({
+        clientId: 'e93389cd43464e6cbacc5a414b980f3f'
+    });
+
+    $authProvider.instagram({
+        name: 'instagram',
+        url: '/auth/instagram',
+        authorizationEndpoint: 'https://api.instagram.com/oauth/authorize',
+        redirectUri: window.location.origin,
+        requiredUrlParams: ['scope'],
+        scope: ['basic'],
+        scopeDelimiter: '+',
+        oauthType: '2.0'
+    });
 
     $routeProvider
         .when('/', {
@@ -31,6 +46,5 @@ app.config(function($routeProvider, $locationProvider) {
             controller: ProfileController,
             controllerAs: 'vm'
         })
-        .otherwise('/');
     ;
 });

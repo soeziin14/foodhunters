@@ -35,66 +35,58 @@ app.use(require("express-session")({
     saveUninitialized: false
 }));
 
-app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.initialize());
+//app.use(passport.session());
+//
+//passport.serializeUser(function(user, done) {
+//    done(null, user);
+//});
+//
+//passport.deserializeUser(function(obj, done) {
+//    done(null, obj);
+//});
+//passport.use(new LocalStrategy(User.authenticate()));
+//
+//passport.use(new InstagramStrategy({
+//
+//    clientID:  'e93389cd43464e6cbacc5a414b980f3f',
+//    clientSecret: '977a975146c1418d839bb2d540abdd2e',
+//    callbackURL: "http://localhost:3000/api/auth/instagram/callback"
+//
+//}, function(accessToken, refreshToken, profile, done) {
+//    console.log("find!!!", accessToken, refreshToken, profile, done);
+//    InstagramUser.findOne({ oauthID: profile.id }, function(err, user) {
+//        if(err) {
+//            console.log("insta find err", err);  // handle errors!
+//        }
+//        if (!err && user !== null) {
+//            done(null, user);
+//        } else {console.log("?!?!?!?!");
+//            user = new InstagramUser({
+//                oauthID: profile.id,
+//                name: profile.displayName,
+//            });
+//            user.save(function(err) {
+//                if(err) {
+//                    console.log(err);  // handle errors!
+//                } else {
+//                    console.log("saving user ...", user);
+//                    done(null, user);
+//                }
+//            });
+//        }
+//    });
+//   }
+//));
 
-passport.serializeUser(function(user, done) {
-    done(null, user);
-});
 
-passport.deserializeUser(function(obj, done) {
-    done(null, obj);
-});
-passport.use(new LocalStrategy(User.authenticate()));
 
-passport.use(new InstagramStrategy({
-
-    clientID:  'e93389cd43464e6cbacc5a414b980f3f',
-    clientSecret: '977a975146c1418d839bb2d540abdd2e',
-    callbackURL: "http://localhost:3000/api/auth/instagram/callback"
-
-}, function(accessToken, refreshToken, profile, done) {
-    console.log("find!!!", accessToken, refreshToken, profile, done);
-    InstagramUser.findOne({ oauthID: profile.id }, function(err, user) {
-        if(err) {
-            console.log("insta find err", err);  // handle errors!
-        }
-        if (!err && user !== null) {
-            done(null, user);
-        } else {console.log("?!?!?!?!");
-            user = new InstagramUser({
-                oauthID: profile.id,
-                name: profile.displayName,
-            });
-            user.save(function(err) {
-                if(err) {
-                    console.log(err);  // handle errors!
-                } else {
-                    console.log("saving user ...", user);
-                    done(null, user);
-                }
-            });
-        }
-    });
-   }
-));
-
-var allowCrossDomain = function(req, res, next) {
-
-    if ('OPTIONS' == req.method) {
-        res.send(200);
-    }
-    else {
-        next();
-    }
-};
-
-app.use(function(req, res, next){
-    res.locals.currentUser = req.user;
-    res.locals.error = req.flash("error");
-    res.locals.success = req.flash("success");
-    next();
-});
+//app.use(function(req, res, next){
+//    res.locals.currentUser = req.user;
+//    res.locals.error = req.flash("error");
+//    res.locals.success = req.flash("success");
+//    next();
+//});
 
 //Routes to pages
 app.use('/', index);

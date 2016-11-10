@@ -1,10 +1,13 @@
 angular.module('app').controller('SigninoutController', SigninoutController);
 
-function SigninoutController($sce, $http, $scope, $location, AuthFactory, cookieFactory, jwtHelper, toaster) {
+function SigninoutController($auth, $http, $scope, $location, AuthFactory, cookieFactory, jwtHelper, toaster) {
 
     $scope.test = "";
-    $scope.getInstagramUser = function() {
+    $scope.getInstagramUser = function(provider) {
         console.log("let's get it");
+        $auth.authenticate(provider).then(function(response){
+            console.log("response!" ,response);
+        })
         //$http.jsonp('https://api.instagram.com/oauth/authorize/?client_id=e93389cd43464e6cbacc5a414b980f3f' +
         //    '&redirect_uri=http://localhost:3000&response_type=token')
         //    .then(function( response){
@@ -24,14 +27,14 @@ function SigninoutController($sce, $http, $scope, $location, AuthFactory, cookie
         //}).error(function(error){
         //    console.log("Errr:", error);
         //});
-        $http.jsonp('/api/auth/instagram', {jsonpCallbackParam: 'callback'}).then(function (response) {
-            console.log("insta success? ", response);
-            if (response.data.success) {
-
-            }
-        }).catch(function (error) {
-            console.log("Failed Auth:", error);
-        });
+        //$http.jsonp('/api/auth/instagram', {jsonpCallbackParam: 'callback'}).then(function (response) {
+        //    console.log("insta success? ", response);
+        //    if (response.data.success) {
+        //
+        //    }
+        //}).catch(function (error) {
+        //    console.log("Failed Auth:", error);
+        //});
     }
     $scope.isSignedIn = function() {
         if (cookieFactory.getCookieData() == "" || cookieFactory.getCookieData() == undefined) {
