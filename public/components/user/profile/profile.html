@@ -1,0 +1,157 @@
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+<div ng-controller="ProfileController" ng-init="" style="display:flex;">
+    <div class="sidebar">
+        <div class="mini-submenu">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </div>
+        <div class="list-group" style="">
+        <span href="#" class="list-group-item active">
+            Controls
+            <span class="pull-right" id="slide-submenu">
+                <i class="fa fa-times"></i>
+            </span>
+        </span>
+            <a href="/api/auth/instagram" ng-click="" class="list-group-item">
+                <i class="fa fa-comment-o"></i> Connect Instagram
+            </a>
+            <a href="#" class="list-group-item">
+                <i class="fa fa-search"></i> Lorem ipsum
+            </a>
+            <a href="#" class="list-group-item">
+                <i class="fa fa-user"></i> Lorem ipsum
+            </a>
+            <a href="#" class="list-group-item">
+                <i class="fa fa-folder-open-o"></i> Lorem ipsum <span class="badge">14</span>
+            </a>
+            <a href="#" class="list-group-item">
+                <i class="fa fa-bar-chart-o"></i> Lorem ipsumr <span class="badge">14</span>
+            </a>
+            <a href="#" ng-click="signout()" class="list-group-item">
+                <i class="fa fa-envelope"></i> Sign Out
+            </a>
+        </div>
+    </div>
+
+
+    <div class="container" style="float:left; margin-top: 20px; margin-bottom: 20px;">
+        <div class="row panel">
+            <div class="col-md-4 bg_blur">
+                <a href="#" class="follow_btn hidden-xs">Track</a>
+            </div>
+            <div class="col-md-8 col-xs-12">
+                <img src="http://lorempixel.com/output/people-q-c-100-100-1.jpg"
+                     class="img-thumbnail picture hidden-xs"/>
+                <img src="http://lorempixel.com/output/people-q-c-100-100-1.jpg"
+                     class="img-thumbnail visible-xs picture_mob"/>
+                <div class="header">
+                    <h1>{{currentUser.firstName}} {{currentUser.lastName}}</h1>
+                    <h4>{{currentUser.level}}</h4>
+                <span>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
+"There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row nav">
+            <div class="col-md-4"></div>
+            <div class="col-md-8 col-xs-12" style="margin: 0px;padding: 0px;">
+                <div class="col-md-4 col-xs-4 well"><i class="fa fa-weixin fa-lg"></i> {{currentUser.reputation}}</div>
+                <div class="col-md-4 col-xs-4 well"><i class="fa fa-heart-o fa-lg"></i> {{currentUser.hyenas.length}}
+                </div>
+                <div class="col-md-4 col-xs-4 well"><i class="fa fa-thumbs-o-up fa-lg"></i> {{currentUser.likes}}</div>
+            </div>
+        </div>
+
+        <div class="row panel" style="padding-bottom:40px;">
+            <div class="col-md-12 header" style="margin:0;">
+                <h1 style="margin-top:10px;">Recent Activities</h1>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-3">
+                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
+                         class="img-responsive" alt="">
+                </div>
+                <div class="col-md-3">
+                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
+                         class="img-responsive" alt="">
+                </div>
+                <div class="col-md-3">
+                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
+                         class="img-responsive" alt="">
+                </div>
+                <div class="col-md-3">
+                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
+                         class="img-responsive" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="row panel" style="padding-bottom:40px;">
+            <div class="col-md-12 header" style="margin:0;">
+                <h1 style="margin-top:10px;">BLOGS</h1>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-3">
+                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
+                         class="img-responsive" alt="">
+                </div>
+                <div class="col-md-3">
+                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
+                         class="img-responsive" alt="">
+                </div>
+                <div class="col-md-3">
+                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
+                         class="img-responsive" alt="">
+                </div>
+                <div class="col-md-3">
+                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
+                         class="img-responsive" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="row panel" style="padding-bottom:40px;">
+            <div class="col-md-12 header" style="margin:0;">
+                <h1 style="margin-top:10px;">Visited Spots</h1>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-3">
+                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
+                         class="img-responsive" alt="">
+                </div>
+                <div class="col-md-3">
+                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
+                         class="img-responsive" alt="">
+                </div>
+                <div class="col-md-3">
+                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
+                         class="img-responsive" alt="">
+                </div>
+                <div class="col-md-3">
+                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
+                         class="img-responsive" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    $(function () {
+
+        $('#slide-submenu').on('click', function () {
+            $(this).closest('.list-group').fadeOut('slide', function () {
+                $('.mini-submenu').fadeIn(0);
+            });
+
+        });
+
+        $('.mini-submenu').on('click', function () {
+            $(this).next('.list-group').toggle('slide');
+            $('.mini-submenu').hide();
+        })
+    })
+
+</script>

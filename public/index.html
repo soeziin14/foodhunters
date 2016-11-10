@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/node_modules/angularjs-toaster/toaster.min.css">
+    <link rel="stylesheet" href="/stylesheets/layout.css">
+</head>
+<body ng-app="app">
+
+    <fh-navbar></fh-navbar>
+    <ng-view></ng-view>
+
+<script src="/vendor/jquery/dist/jquery.min.js"></script>
+<script src="/vendor/angular/angular.js"></script>
+<script src="/vendor/angular-resource/angular-resource.js"></script>
+<script src="/vendor/angular-css/angular-css.js" ></script>
+<script src="/vendor/angular-route/angular-route.js"></script>
+<script src="/node_modules/angular-jwt/dist/angular-jwt.js"></script>
+<script src="/node_modules/angular-cookies/angular-cookies.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/node_modules/angularjs-toaster/toaster.js"></script>
+<script src="app.js"></script>
+<script src="components/directive-navbar/navbar.js"></script>
+<script src="components/user/auth-factory.js"></script>
+<script src="components/user/cookie-factory.js"></script>
+<script src="components/user/signup/signup.js"></script>
+<script src="components/user/signinout/signinout.js"></script>
+<script src="components/user/profile/profile.js"></script>
+
+</body>

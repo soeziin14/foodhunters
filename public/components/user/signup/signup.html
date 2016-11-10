@@ -1,0 +1,72 @@
+<div class="container" ng-controller="SignupController as vm" ng-init="vm.init()" role="navigation">
+	<div id="signupbox" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<div class="panel-title">Sign Up</div>
+				<div><a id="signinlink" href="#/signin">Sign In</a></div>
+			</div>
+			<div class="panel-body">
+				<form name="signupform" id="signupform" role="form" class="form-horizontal" ng-submit="vm.signup()">
+					<div id="signupalert">
+					</div>
+					<div class="form-group">
+						<label for="email" class="col-md-3 control-label">Email</label>
+						<div class="col-md-9">
+							<input type="email" ng-model="vm.email" name="email" placeholder="Email Address" class="form-control" required/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="firstname" class="col-md-3 control-label">First Name</label>
+						<div class="col-md-9">
+							<input type="text" ng-model="vm.firstname" name="firstname" placeholder="First Name" class="form-control" required/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="lastname" class="col-md-3 control-label">Last Name</label>
+						<div class="col-md-9">
+							<input type="text" ng-model="vm.lastname" name="lastname" placeholder="Last Name" class="form-control"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="username" class="col-md-3 control-label">User Name</label>
+						<div class="col-md-9">
+							<input type="text" ng-model="vm.username" name="username" placeholder="User Name" class="form-control" required/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="password" class="col-md-3 control-label">Password</label>
+						<div class="col-md-9">
+							<input type="password" ng-model="vm.password" name="password" placeholder="Password" class="form-control" required/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="passwordrepeat" class="col-md-3 control-label">Re-Password</label>
+						<div class="col-md-9">
+							<input type="password" ng-model="vm.passwordrepeat" name="passwordrepeat" placeholder="Repeat Password" class="form-control" required/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="address" class="col-md-3 control-label">Address</label>
+						<div class="col-md-9">
+							<input type="text" ng-model="vm.address" name="address" placeholder="Address" class="form-control"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-offset-3 col-md-9">
+							<button id="btn-signup" type="submit" class="btn btn-info">
+								<i class="icon-hand-right"></i> &nbsp Sign Up</button>
+							<span style="margin-left:8px;">or</span>
+						</div>
+					</div>
+					<div id="buttons" class="form-group">
+						<div class="col-md-offset-3 col-md-9">
+							<button id="btn-fbsignup" type="button" class="btn btn-primary">
+								<i class="icon-facebook"></i>   Sign Up with Facebook
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
