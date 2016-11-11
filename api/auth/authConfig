@@ -1,0 +1,5 @@
+module.exports = {
+    TOKEN_SECRET    : 'what is my s3cr3t',
+    INSTAGRAM_SECRET   : '977a975146c1418d839bb2d540abdd2e'
+
+};

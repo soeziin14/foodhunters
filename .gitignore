@@ -1,0 +1,5 @@
+.bowerrc
+.idea/
+karma.conf.js
+node_modules/
+public/vendor/*

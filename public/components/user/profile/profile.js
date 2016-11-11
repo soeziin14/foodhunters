@@ -1,59 +1,26 @@
 angular.module('app').controller('ProfileController', ProfileController);
 
-function ProfileController($http, $scope, $location, AuthFactory, cookieFactory, jwtHelper, toaster) {
-console.log("here!");
-    $scope.currentUser = null;
+function ProfileController($auth, $window, $http, $scope, $location, AuthFactory, cookieFactory, toaster) {
 
-    $scope.setProfile = function(currentuser) {
-        $scope.currentUser = currentuser;
-    }
-    $scope.getProfile = function() {
-        $http.get('/api/CRUD/' + cookieFactory.getCookieId()).then(function (response) {
-            if (response.data.success) {
-                AuthFactory.isLoggedIn = true;
-                $scope.currentUser = response.data.user;
-            }
+    $scope.currentUser = null;//console.log("!!! ", '/api/CRUD/' + cookieFactory.getId());
+    $http.get('/api/CRUD/' + cookieFactory.getToken()).then(function (response) {
+        if (response.data.success) {
+            AuthFactory.isLoggedIn = true;
+            $scope.currentUser = response.data.user;
 
-            if (response.data.wrongCredentials) {
-                toaster.pop("error", "", response.data.wrongCredentials);
-            }
+        } else {
+            toaster.pop("error", "", "Invalid instagram or user authentication.");
+        }
+    }).catch(function (error) {
+        console.log('error', "", error);
+    });
 
-
-        }).catch(function (error) {
-            toaster.pop('error', "", error);
-            //console.log(error);
-        });
-    }
-
-
-
-    $scope.getInstagramUser = function() {
-console.log("let's get it");
-        $http.get('/api/auth/instagram').then(function (response) {
-console.log("insta success? ", response);
-            if (response.data.success) {
-                AuthFactory.isLoggedIn = false;
-                cookieFactory.clearCookieData();
-                $location.path('/');
-            }
-        }).catch(function (error) {
-            console.log(error);
-        });
-    }
     $scope.signout = function () {
 
-        $http.get('/api/CRUD/signout').then(function (response) {
-
-            if (response.data.success) {
-                AuthFactory.isLoggedIn = false;
-                cookieFactory.clearCookieData();
-                $location.path('/');
-            }
-        }).catch(function (error) {
-            console.log(error);
-        });
-
-
+        AuthFactory.isLoggedIn = false;
+        cookieFactory.clearCookieData();console.log("path!!: ", $location.path());
+        $auth.logout();
+        $window.location.href = '/'; // would really like to use $locaiton.path('/') here, but doesn't work??
     }
 
     $scope.isActiveTab = function (url) {

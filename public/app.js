@@ -1,6 +1,20 @@
-var app = angular.module('app', ['ngResource', 'ngRoute', 'angularCSS', 'angular-jwt', 'ngCookies', 'toaster']);
+var app = angular.module('app', ['ngResource', 'ngRoute', 'angularCSS', 'angular-jwt', 'ngCookies', 'toaster', 'satellizer']);
 
-app.config(function($routeProvider, $locationProvider) {
+app.config(function($routeProvider, $authProvider) {
+
+    $authProvider.instagram({
+        clientId: 'e93389cd43464e6cbacc5a414b980f3f'
+    });
+
+    $authProvider.instagram({
+        name: 'instagram',
+        url: '/auth/instagram',
+        authorizationEndpoint: 'https://api.instagram.com/oauth/authorize',
+        redirectUri: window.location.origin,
+        scope: ['basic'],
+        scopeDelimiter: '+',
+        oauthType: '2.0'
+    });
 
     $routeProvider
         .when('/', {
@@ -11,7 +25,6 @@ app.config(function($routeProvider, $locationProvider) {
             css: 'components/user/signinout/signin.css',
             templateUrl: 'components/user/signinout/signin.html',
             controller: SigninoutController,
-            controlelrAs: 'vm'
         })
         .when('/signup', {
             css: 'components/user/signup/signup.css',
@@ -23,14 +36,6 @@ app.config(function($routeProvider, $locationProvider) {
             css: 'components/user/profile/profile.css',
             templateUrl: 'components/user/profile/profile.html',
             controller: ProfileController,
-            controllerAs: 'vm'
         })
-        .when('/api/auth/instagram/callback*', {
-            css: 'components/user/profile/profile.css',
-            templateUrl: 'components/user/profile/profile.html',
-            controller: ProfileController,
-            controllerAs: 'vm'
-        })
-        .otherwise('/');
     ;
 });
