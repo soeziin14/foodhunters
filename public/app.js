@@ -11,7 +11,6 @@ app.config(function($routeProvider, $authProvider) {
         url: '/auth/instagram',
         authorizationEndpoint: 'https://api.instagram.com/oauth/authorize',
         redirectUri: window.location.origin,
-        requiredUrlParams: ['scope'],
         scope: ['basic'],
         scopeDelimiter: '+',
         oauthType: '2.0'
@@ -26,7 +25,6 @@ app.config(function($routeProvider, $authProvider) {
             css: 'components/user/signinout/signin.css',
             templateUrl: 'components/user/signinout/signin.html',
             controller: SigninoutController,
-            controlelrAs: 'vm'
         })
         .when('/signup', {
             css: 'components/user/signup/signup.css',
@@ -38,13 +36,6 @@ app.config(function($routeProvider, $authProvider) {
             css: 'components/user/profile/profile.css',
             templateUrl: 'components/user/profile/profile.html',
             controller: ProfileController,
-            controllerAs: 'vm'
-        })
-        .when('/api/auth/instagram/callback*', {
-            css: 'components/user/profile/profile.css',
-            templateUrl: 'components/user/profile/profile.html',
-            controller: ProfileController,
-            controllerAs: 'vm'
         })
     ;
 });

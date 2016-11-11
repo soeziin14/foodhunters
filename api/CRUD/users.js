@@ -1,103 +1,91 @@
-var passport            = require('passport'),
-    jwt                 = require('jsonwebtoken'),
-    InstagramUser       = require('../models/user-oauth'),
-    User                = require('../models/user');
+var jwt = require('jwt-simple'),
+    moment = require('moment'),
+    bcrypt = require('bcryptjs'),
+    request = require('request'),
+    User = require('../models/user'),
+    authHelper = require('../auth/authHelpers');
 
-module.exports.signup = function(req, res){
-    console.log('registering new user...');
+var config = require('../auth/authConfig');
 
-    var email           = req.body.email,
-        firstname       = req.body.firstname,
-        lastname        = req.body.lastname,
-        password        = req.body.password,
-        username        = req.body.username,
-        address         = req.body.address || null;
+//module.exports.getUser = function (req, res, next) {
+//    console.log("getting user...", req.params.userId);
+//
+//    User.findById(req.params.userId).populate("comments").exec(function (err, foundUser) {
+//        if (err) {
+//            console.log(err);
+//        } else {
+//            console.log(foundUser);
+//            //render show template with that campground
+//            res.status(200).json({success: true, user: foundUser});
+//        }
+//    });
+//};
 
-    var newUser = new User({
-        email       :  email,
-        firstName   :  firstname,
-        lastName    :  lastname,
-        username    :  username,
-        address     :  address
-    });
-
-    User.register(newUser, password, function(err, user){
-        if (err) {
-            console.log(err, newUser);
-            res.status(400).json(err);
-        } else {
-            console.log('user created', user);
-            passport.authenticate("local")(req, res, function(){
-                console.log(user.username + ' authenticated.');
-            });
-            res.status(201).json({success: true});
-        }
-    });
-};
-
-module.exports.signin = function(req, res, next){
-    console.log('Logging in...');
-
-    passport.authenticate("local", function(err, user, info) {
-        if (err) {
-            return next(err);
-        }
-        if (!user) {
-            var msg = "Wrong credentials entered.";
-            res.send({wrongCredentials: msg});
-        } else {
-            req.logIn(user, function(err) {
-                if (err) {
-                    return next(err);
+module.exports.instagramSignin = function (req, res, next) {
+    //console.log("getting Instagram user!!...", req.body, res);
+    var accessTokenUrl = 'https://api.instagram.com/oauth/access_token';
+    //console.log("req.body: ", req.body);
+    var params = {
+        client_id: req.body.clientId,
+        redirect_uri: req.body.redirectUri,
+        client_secret: config.INSTAGRAM_SECRET,
+        code: req.body.code,
+        grant_type: 'authorization_code'
+    };
+    // Step 1. Exchange authorization code for access token.
+    request.post({url: accessTokenUrl, form: params, json: true}, function (error, response, body) {
+        // Step 2a. Link user accounts.
+        if (req.header('Authorization')) {
+            User.findOne({instagram: body.user.id}, function (err, existingUser) {
+                if (existingUser) {
+                    var token = authHelper.createJWT(existingUser);
+                    return res.send({success: true, token: token, user: existingUser});
                 }
-                var token = jwt.sign({username: user.username, id: user._id}, 's3cr3t', {expiresIn: 3600 });
-                res.status(200).json({success: true, token: token});
+                var token = req.header('Authorization').split(' ')[1];
+                var payload = jwt.decode(token, config.TOKEN_SECRET);
+
+                var user = new User({
+                    fullName: body.user.full_name,
+                    instagram: body.user.id,
+                    picture: body.user.profile_picture,
+                    displayName: body.user.username
+                });
+                user.save(function (err, user) {
+                    var token = authHelper.createJWT(user);
+                    res.send({token: token, user: user});
+                });
+                //});
             });
-        }
-    })(req, res, next);
-};
-
-module.exports.signout = function(req, res, next) {
-    console.log('logging out...');
-    req.logout();
-    res.status(200).json({success: true});
-};
-
-module.exports.getUser = function(req, res, next) {
-    console.log("getting user...", req.params.userId);
-
-    User.findById(req.params.userId).populate("comments").exec(function(err, foundUser){
-        if(err){
-            console.log(err);
         } else {
-            console.log(foundUser);
-            //render show template with that campground
-            res.status(200).json({success: true, user: foundUser});
+            // Step 2b. Create a new user account or return an existing one.
+            User.findOne({instagram: body.user.id}, function (err, existingUser) {
+                if (existingUser) {
+
+                    var token = authHelper.createJWT(existingUser);
+                    return res.send({success: true, token: token, user: existingUser});
+                }
+
+                var user = new User({
+                    instagram: body.user.id,
+                    picture: body.user.profile_picture,
+                    displayName: body.user.username
+                });
+                user.save(function () {
+                    var token = authHelper.createJWT(user);
+                    res.send({token: token, user: user});
+                });
+            });
         }
     });
 };
 
-module.exports.getInstagramUser = function(req, res, next) {
-    console.log("getting Instagram user...", req.body, res);
+module.exports.getInstagramUser = function (req, res, next) {
 
-    passport.authenticate("instagram", function(err, user, info) {
-        if (err) {
-            return next(err);
-        }
+    User.findById(req.user).populate("comments").exec(function (err, user) {
+        console.log("user: ", user);
         if (!user) {
-            var msg = "Wrong credentials entered.";
-            res.send({wrongCredentials: msg});
-        } else {
-                var token = jwt.sign({username: user.username, id: user._id}, 's3cr3t', {expiresIn: 3600 });
-                res.status(200).json({success: true, token: token});
-            }
-        })(req, res, next);
-};
-
-module.exports.getInstagramUserCallback = function(req, res, next) {
-    console.log("Instagram user callback");
-    passport.authenticate('instagram'),
-        function(req, res) {
-            res.render("/components/main")
-        };
-};
+            return res.status(400).send({message: 'User not found'});
+        }
+        res.send({success: true, user: user});
+    });
+}

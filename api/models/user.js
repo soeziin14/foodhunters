@@ -1,38 +1,22 @@
-var mongoose = require('mongoose');
-var passportLocalMongoose = require("passport-local-mongoose");
-var roles = 'scouter blogger admin manager'.split(' ');
-var level = 'Cat Cougar Lion'.split(' ');
+var     mongoose            = require('mongoose'),
+        roles               = 'scouter blogger admin manager'.split(' '),
+        bcrypt              = require('bcryptjs'),
+        level               = 'Cat Cougar Lion'.split(' ');
 
 var userSchema = new mongoose.Schema({
-    address: {
-      type: String,
-      trim: true
-    },
-    firstName: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    lastName: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    //passport username cannot be userName?!
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true
-    },
-    password: String,
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true
-    },
+
+    email: { type: String, unique: true, lowercase: true, trim:true },
+    password: { type: String, select: false },
+    displayName: String,
+    picture: String,
+    facebook: String,
+    google: String,
+    instagram: String,
+    address: {type: String,trim: true},
+    fullName: {type: String,trim: true},
     introduction: String,
+    reputation:{type: Number,default: 0},
+
     role: {
         type:String,
         enum: roles,
@@ -63,16 +47,7 @@ var userSchema = new mongoose.Schema({
             ref: "User"
         }
     }],
-    reputation: {
-        type: Number,
-        default: 0
-    },
-    photoUrl: String,
-    facebookUrl: String,
-    created: {
-        type: Date,
-        default: Date.now
-    },
+
     comments: [{
         id: {
             type: mongoose.Schema.Types.ObjectId,
@@ -96,6 +71,24 @@ var userSchema = new mongoose.Schema({
         timestamps: true
     });
 
-userSchema.plugin(passportLocalMongoose);
+
+userSchema.pre('save', function(next) {
+    var user = this;
+    if (!user.isModified('password')) {
+        return next();
+    }
+    bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(user.password, salt, function(err, hash) {
+            user.password = hash;
+            next();
+        });
+    });
+});
+
+userSchema.methods.comparePassword = function(password, done) {
+    bcrypt.compare(password, this.password, function (err, isMatch) {
+        done(err, isMatch);
+    });
+};
 
 module.exports = mongoose.model("User", userSchema);

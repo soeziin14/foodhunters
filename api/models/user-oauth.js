@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var bcrypt  = require('bcryptjs');
+
 var passportLocalMongoose = require("passport-local-mongoose");
 var roles = 'scouter blogger admin manager'.split(' ');
 var level = 'Cat Cougar Lion'.split(' ');
