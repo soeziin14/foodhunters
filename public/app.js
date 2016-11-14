@@ -37,10 +37,13 @@ app.config(function($routeProvider, $authProvider) {
             controller: ProfileController,
         })
     ;
-}).run(function($rootScope, $window, $auth) {console.log("authenticated11: ", $auth.isAuthenticated());
-    console.log("$authenticated: ", $window.localStorage.currentUser);
-    //console.log("$authenticated2: ", $window.localStorage.currentUser);
-    if ($auth.isAuthenticated()) {console.log("authenticated: ", $auth.isAuthenticated());
-        $rootScope.currentUser = $window.localStorage.currentUser;
-    }
+}).run(function($rootScope, $window, $auth) {console.log("authenticated? ", $auth.isAuthenticated());
+    //if ($auth.isAuthenticated()) {console.log("authenticated: ", $auth.isAuthenticated());
+    //    $rootScope.currentUser = $window.localStorage.currentUser;
+    //}
+    $rootScope.$on('$routeChangeStart', function (event, next, current) {
+        if($window.localStorage.currentUser) {
+            $rootScope.currentUser = JSON.parse($window.localStorage.currentUser);
+        }
+    });
 });

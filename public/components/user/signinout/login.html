@@ -4,7 +4,7 @@
 		<div class="panel-body">
 			<h4 class="text-center"><i class="ion-log-in"></i> Log in</h4>
 
-			<form name="loginForm" ng-submit="login()" novalidate>
+			<form name="loginForm" novalidate>
 				<div class="form-group has-feedback" ng-class="{ 'has-error': loginForm.email.$invalid && loginForm.email.$dirty }">
 					<input server-error class="form-control input-lg"
 								 type="email" name="email" ng-model="email" placeholder="Email" required autofocus>
@@ -23,7 +23,7 @@
 					</div>
 				</div>
 
-				<button type="submit" class="btn btn-block btn-success" ng-disabled="loginForm.$invalid">Log in</button>
+				<button type="submit" class="btn btn-block btn-success" ng-click="signin()" ng-disabled="loginForm.$invalid">Log in</button>
 
 				<br/>
 
@@ -36,9 +36,6 @@
 					<hr>
 				</div>
 			</form>
-			<button class="btn btn-block btn-instagram" ng-click="instagramLogin()">
-				<i class="ion-social-instagram"></i> Sign in with Instagram
-			</button>
 		</div>
 	</div>
 

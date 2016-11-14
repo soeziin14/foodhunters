@@ -18,6 +18,7 @@ module.exports.signup = function (req, res) {
         }
 
         var user = new User({
+            fullName: req.body.fullName,
             email: req.body.email,
             password: req.body.password
         });
@@ -34,14 +35,13 @@ module.exports.login = function (req, res) {
             console.log("no user");
             return res.status(401).send({message: {email: 'Incorrect email'}});
         }
-        console.log("user found," + user);
-        console.log("PW: ", req.body.password);
-        console.log("pw2: ", user.password);
+        //console.log("user found," + user);
+        //console.log("PW: ", req.body.password);
+        //console.log("pw2: ", user.password);
         bcrypt.compare(req.body.password, user.password, function (err, isMatch) {
             if (!isMatch) {
                 return res.status(401).send({message: {password: 'Incorrect password'}});
             }
-            console.log("test pw SUCCESS");
             user = user.toObject();
             delete user.password;
 
@@ -51,7 +51,7 @@ module.exports.login = function (req, res) {
     });
 };
 
-module.exports.linkInstagram = function (req, res, next) {
+module.exports.linkInstagram = function (req, res) {
     var accessTokenUrl = 'https://api.instagram.com/oauth/access_token';
     console.log("req.body!!!!! ", req.body);
     var email = req.body.email;
@@ -68,42 +68,45 @@ module.exports.linkInstagram = function (req, res, next) {
 
         if (req.header('Authorization')) {
             console.log('auth body.user', body.user);
-            User.findOne({instagram: body.user.id}, function (err, existingUser) {
-                if (err) {
-                    console.log("Err finding instagram.user.id in db");
-                    return;
-                }
-                if (existingUser) {
-                    return res.status(409).send({message: 'There is already an Instagram account that belongs to you'});
-                }
-            });
+            if(req.body.email) {console.log("has email");
+                User.findOneAndUpdate({email: email}, {
+                    fullName: body.user.full_name,
+                    instagram: body.user.id,
+                    picture: body.user.profile_picture,
+                    displayName: body.user.username,
+                    accessToken: body.access_token
+                }, function (err, user) {
+                    if (err) { console.log("err", err);}
+                    if (user){
+                        var token = authHelper.createJWT(user);
+                        res.status(200).send({ token: token, user: user})
+                    }
+                });
+            } else {
+                User.findOne({instagram: body.user.id}, function (err, existingUser) {
+                    if (err) {
+                        console.log("Err finding instagram.user.id in db");
+                        return;
+                    }
+                    if (existingUser) {console.log("auth exiting: ", existingUser);
+                        return res.status(409).send({message: 'There is already an Instagram account that belongs to you'});
+                    }
+                });
+                var user = new User({
+                    instagram: body.user.id,
+                    displayName: body.user.username,
+                    fullName: body.user.full_name,
+                    picture: body.user.profile_picture,
+                    accessToken: body.access_token
+                });
+                user.save(function() {
+                    var token = authHelper.createJWT(user);
+                    console.log("yes auth save and send token", token);
+                    console.log("yes auth save and send user", user);
+                    res.status(200).send({ token: token, user: user });
+                });
+            }
 
-            var user = new User({
-                instagramId: body.user.id,
-                username: body.user.username,
-                fullName: body.user.full_name,
-                picture: body.user.profile_picture,
-                accessToken: body.access_token
-            });
-            user.save(function() {
-                var token = authHelper.createJWT(user);
-                console.log("yes auth save and send token", token);
-                console.log("yes auth save and send user", user);
-                res.status(200).send({ token: token, user: user });
-            });
-            //User.findOneAndUpdate({email: email}, {
-            //    fullName: body.user.full_name,
-            //    instagram: body.user.id,
-            //    picture: body.user.profile_picture,
-            //    displayName: body.user.username,
-            //    accessToken: body.access_token
-            //}, function (err, user) {
-            //    if (err) {
-            //        console.log("auth save", user);
-            //
-            //        console.log("User must provide email.");
-            //    }
-            //});
         } else {
             console.log("no auth header body.user: ", body.user);
             // Step 2b. Create a new user account or return an existing one.
@@ -117,31 +120,34 @@ module.exports.linkInstagram = function (req, res, next) {
                     return res.status(200).send({token: token, user: existingUser});
                 }console.log("nonexisitng user: ");
 
-                var user = new User({
-                    instagramId: body.user.id,
-                    username: body.user.username,
-                    fullName: body.user.full_name,
-                    picture: body.user.profile_picture,
-                    accessToken: body.access_token
-                });
-                user.save(function() {
-                    var token = authHelper.createJWT(user);
-                    console.log("no auth save and send token", token);
-                    console.log("no auth save and send user", user);
-                    res.status(200).send({ token: token, user: user });
-                });
-                //User.findOneAndUpdate({email: email}, {
-                //    fullName: body.user.full_name,
-                //    instagram: body.user.id,
-                //    picture: body.user.profile_picture,
-                //    displayName: body.user.username,
-                //    accessToken: body.access_token
-                //}, function (err, user) {
-                //    if (err) {
-                //        console.log("unauth save", user);
-                //        console.log("User must provide email.");
-                //    }
-                //});
+                if(req.body.email) {
+                    User.findOneAndUpdate({email: email}, {
+                        fullName: body.user.full_name,
+                        instagram: body.user.id,
+                        picture: body.user.profile_picture,
+                        displayName: body.user.username,
+                        accessToken: body.access_token
+                    }, function (err, user) {
+                        if (err) {
+                            console.log("unauth save", user);
+                            console.log("User must provide email.");
+                        }
+                    });
+                } else {
+                    var user = new User({
+                        instagram: body.user.id,
+                        displayName: body.user.username,
+                        fullName: body.user.full_name,
+                        picture: body.user.profile_picture,
+                        accessToken: body.access_token
+                    });
+                    user.save(function() {
+                        var token = authHelper.createJWT(user);
+                        console.log("no auth save and send token", token);
+                        console.log("no auth save and send user", user);
+                        res.status(200).send({ token: token, user: user });
+                    });
+                }
             });
         }
     });
