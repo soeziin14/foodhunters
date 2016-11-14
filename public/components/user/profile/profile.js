@@ -1,27 +1,29 @@
 angular.module('app').controller('ProfileController', ProfileController);
 
-function ProfileController($auth, $window, $http, $scope, $location, AuthFactory, cookieFactory, toaster) {
-
-    $scope.currentUser = null;//console.log("!!! ", '/api/CRUD/' + cookieFactory.getId());
-    $http.get('/api/CRUD/' + cookieFactory.getToken()).then(function (response) {
-        if (response.data.success) {
-            AuthFactory.isLoggedIn = true;
-            $scope.currentUser = response.data.user;
-
-        } else {
-            toaster.pop("error", "", "Invalid instagram or user authentication.");
-        }
-    }).catch(function (error) {
-        console.log('error', "", error);
-    });
-
-    $scope.signout = function () {
-
-        AuthFactory.isLoggedIn = false;
-        cookieFactory.clearCookieData();console.log("path!!: ", $location.path());
-        $auth.logout();
-        $window.location.href = '/'; // would really like to use $locaiton.path('/') here, but doesn't work??
+function ProfileController($auth, API, $rootScope, $window, $http, $scope, $location, cookieFactory, toaster) {
+console.log("$rootScope: ", $rootScope.currentUser);
+    if ($rootScope.currentUser && $rootScope.currentUser.displayName) {
+       console.log("success valid, " ,$rootScope.currentUser.token);
+        API.getFeed().success(function(data) {
+            $scope.photos = data;console.log("SUCCESS??!?!:", data);
+        });
     }
+    //user = {
+    //    email: this.email, //scope issues; have to use this.
+    //    password: this.password
+    //};
+
+    //get profile aka user data
+    //$http.get('/api/feed/' + $rootScope.currentUser.token).then(function (response) {
+    //    if (response.data.success) {
+    //
+    //        console.log("media success:", response);
+    //    } else {
+    //        toaster.pop("error", "", "Invalid instagram or user authentication.");
+    //    }
+    //}).catch(function (error) {
+    //    console.log('error', "", error);
+    //});
 
     $scope.isActiveTab = function (url) {
         var currentPath = $location.path().split('/')[1];

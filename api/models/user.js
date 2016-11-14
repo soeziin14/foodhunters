@@ -5,6 +5,7 @@ var     mongoose            = require('mongoose'),
 
 var userSchema = new mongoose.Schema({
 
+    accessToken: String,
     email: { type: String, unique: true, lowercase: true, trim:true },
     password: { type: String, select: false },
     displayName: String,
@@ -16,7 +17,7 @@ var userSchema = new mongoose.Schema({
     fullName: {type: String,trim: true},
     introduction: String,
     reputation:{type: Number,default: 0},
-
+    photos: [],
     role: {
         type:String,
         enum: roles,

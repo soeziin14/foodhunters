@@ -12,7 +12,7 @@ describe('Sign-in&out controller', function() {
         // Set up the mock http service responses
         $httpBackend = $injector.get('$httpBackend');
         // backend definition common for all tests
-        authRequestHandler = $httpBackend.when('GET', '/auth/CRUD/signin')
+        authRequestHandler = $httpBackend.when('GET', '/auth/CRUD/login')
             .respond({username: 'userX'}, {'token': 'xxx'});
 
         // Get hold of a scope (i.e. the root scope)

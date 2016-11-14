@@ -2,6 +2,7 @@ var app = angular.module('app', ['ngResource', 'ngRoute', 'angularCSS', 'angular
 
 app.config(function($routeProvider, $authProvider) {
 
+    $authProvider.loginOnSignup = false;
     $authProvider.instagram({
         clientId: 'e93389cd43464e6cbacc5a414b980f3f'
     });
@@ -19,18 +20,16 @@ app.config(function($routeProvider, $authProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'components/main.html',
-
         })
-        .when('/signin', {
-            css: 'components/user/signinout/signin.css',
-            templateUrl: 'components/user/signinout/signin.html',
+        .when('/login', {
+            css: 'components/user/signinout/login.css',
+            templateUrl: 'components/user/signinout/login.html',
             controller: SigninoutController,
         })
         .when('/signup', {
-            css: 'components/user/signup/signup.css',
+            css: 'components/user/signinout/login.css',
             templateUrl: 'components/user/signup/signup.html',
             controller: SignupController,
-            controllerAs: 'vm'
         })
         .when('/user/:id', {
             css: 'components/user/profile/profile.css',
@@ -38,4 +37,10 @@ app.config(function($routeProvider, $authProvider) {
             controller: ProfileController,
         })
     ;
+}).run(function($rootScope, $window, $auth) {console.log("authenticated11: ", $auth.isAuthenticated());
+    console.log("$authenticated: ", $window.localStorage.currentUser);
+    //console.log("$authenticated2: ", $window.localStorage.currentUser);
+    if ($auth.isAuthenticated()) {console.log("authenticated: ", $auth.isAuthenticated());
+        $rootScope.currentUser = $window.localStorage.currentUser;
+    }
 });

@@ -1,32 +1,67 @@
 angular.module('app').controller('SignupController', SignupController);
 
-function SignupController($http, $location) {
-    var vm = this;
+function SignupController($rootScope, $auth, $scope, $http, $window, $location,
+                          jwtHelper, API, toaster) {
 
-    vm.signup = function() {
-        var user = {
-            email       :  vm.email,
-            firstname   :  vm.firstname,
-            lastname    :  vm.lastname,
-            username    :  vm.username,
-            password    :  vm.password,
-            address     :  vm.address
-        };
+    var user = {};
+    $scope.next = false;
 
-        if (!vm.username || !vm.password) {
-            vm.error = 'Please add a username and a password.';
-        } else {
-            if (vm.password !== vm.passwordrepeat) {
-                vm.error = 'Please make sure the passwords match.';
-            } else {
-                $http.post('/api/CRUD/signup', user).then(function(result) {
-                    vm.message = 'Successful registration, please login.';
-                    vm.error = '';
-                    $location.path('/');
-                }).catch(function(error) {
-                    console.log(error);
+    $scope.emailLogin = function () {
+        $auth.login({email: this.email, password: this.password})
+            .then(function (response) {
+                $window.localStorage.currentUser = JSON.stringify(response.data.user);
+                $rootScope.currentUser = JSON.parse($window.localStorage.currentUser);
+            })
+            .catch(function (response) {
+                $scope.errorMessage = {};
+                angular.forEach(response.data.message, function (message, field) {
+                    $scope.loginForm[field].$setValidity('server', false);
+                    $scope.errorMessage[field] = response.data.message[field];
                 });
-            }
-        }
-    }
+            });
+    };
+    $scope.signup = function () {
+        user = {
+            email: this.email, //scope issues; have to use this.
+            password: this.password
+        };
+        $auth.signup(user)
+            .then(function (response) {
+                $scope.next = true;
+            })
+            .catch(function (response) {
+                console.log("signup fail: ", response.data);
+            });
+
+    };
+
+    $scope.linkInstagram = function (provider) {
+console.log("wtf?", provider);
+        $auth.authenticate(provider, user)
+            .then(function(response) {
+console.log("linksta response: ", reponse);
+            if(response.status == 409) {
+                toaster.pop("error",
+                    'Please',
+                    'This instagram account has already been linked.',
+                    3000
+                );
+                return;
+            }console.log("linksta data:", response.data);
+            var user = response.data.user,
+                token = response.data.token,
+                decoded = jwtHelper.decodeToken(token);
+console.log("linkInsta token: ", token);
+            console.log("linkInsta decode:", decoded);
+            API.getFeed().success(function (data) {
+                $scope.photos = data;console.log("success", data);
+            });
+            console.log("scope photos: ", $scope.photos);
+            toaster.pop('success', "", "Welcome back " + user.displayName);
+            console.log("path!!: ", $location.path());
+            $location.path('/');
+        }).catch(function(err) {
+            console.log("failed linking instagram:", err);
+        });
+    };
 }
