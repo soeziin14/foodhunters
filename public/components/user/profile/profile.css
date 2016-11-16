@@ -1,3 +1,7 @@
+.capitalize {
+    text-transform: capitalize;
+}
+
 *{
     font-family: 'Open Sans', sans-serif;
 }

@@ -17,8 +17,8 @@
             <a href="#" ng-click="connectInstagram()" class="list-group-item">
                 <i class="fa fa-comment-o"></i> Connect Instagram
             </a>
-            <a href="#" class="list-group-item">
-                <i class="fa fa-search"></i> Lorem ipsum
+            <a href="/" class="list-group-item">
+                <i class="fa fa-search"></i> Write BLog
             </a>
             <a href="#" class="list-group-item">
                 <i class="fa fa-user"></i> Lorem ipsum
@@ -46,7 +46,7 @@
                      class="img-thumbnail picture hidden-xs"/>
                 <img src="http://lorempixel.com/output/people-q-c-100-100-1.jpg"
                      class="img-thumbnail visible-xs picture_mob"/>
-                <div class="header">
+                <div class="header capitalize">
                     <h1>{{currentUser.fullName}}</h1>
                     <h4>{{currentUser.level}}</h4>
                 <span>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
@@ -67,24 +67,11 @@
 
         <div class="row panel" style="padding-bottom:40px;">
             <div class="col-md-12 header" style="margin:0;">
-                <h1 style="margin-top:10px;">Recent Photos...</h1>
+                <h1 style="margin-top:10px;">Your Recent Photos...</h1>
             </div>
             <div class="col-md-12">
-                <div class="col-md-3">
-                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
-                         class="img-responsive" alt="">
-                </div>
-                <div class="col-md-3">
-                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
-                         class="img-responsive" alt="">
-                </div>
-                <div class="col-md-3">
-                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
-                         class="img-responsive" alt="">
-                </div>
-                <div class="col-md-3">
-                    <img src="https://pbs.twimg.com/profile_images/675002642196729857/A0OpcJpA.png"
-                         class="img-responsive" alt="">
+                <div class="col-md-3" ng-repeat="photo in photos">
+                    <img ng-src="{{photo.images.standard_resolution.url}}" class="img-responsive" alt="">
                 </div>
             </div>
         </div>

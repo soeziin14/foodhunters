@@ -36,6 +36,9 @@ app.config(function($routeProvider, $authProvider) {
             templateUrl: 'components/user/profile/profile.html',
             controller: ProfileController,
         })
+        .when('/blog/new', {
+            templateUrl: 'components/user/'
+        })
     ;
 }).run(function($rootScope, $window, $auth) {console.log("authenticated? ", $auth.isAuthenticated());
     //if ($auth.isAuthenticated()) {console.log("authenticated: ", $auth.isAuthenticated());
@@ -44,6 +47,9 @@ app.config(function($routeProvider, $authProvider) {
     $rootScope.$on('$routeChangeStart', function (event, next, current) {
         if($window.localStorage.currentUser) {
             $rootScope.currentUser = JSON.parse($window.localStorage.currentUser);
+        }
+        if($window.localStorage.photos) {
+            $rootScope.photos = JSON.parse($window.localStorage.photos);
         }
     });
 });
