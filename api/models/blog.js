@@ -48,6 +48,7 @@ var blogSchema = new Schema ({
             required: true
         }
     },
+    photos: [],
 },
     {
         timestamps: true

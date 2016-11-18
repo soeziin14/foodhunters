@@ -10,21 +10,29 @@
     <fh-navbar></fh-navbar>
     <ng-view></ng-view>
 
-<script src="/vendor/jquery/dist/jquery.min.js"></script>
-<script src="/vendor/angular/angular.js"></script>
-<script src="/vendor/angular-resource/angular-resource.js"></script>
-<script src="/vendor/angular-css/angular-css.js" ></script>
-<script src="/vendor/angular-route/angular-route.js"></script>
+
+<!-- Library/Framework dependencies -->
+<script src="vendor/jquery/dist/jquery.min.js"></script>
+<script src="/node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
+<script src="vendor/angular/angular.js"></script>
+<script src="vendor/angular-resource/angular-resource.js"></script>
+<script src="vendor/angular-css/angular-css.js" ></script>
+<script src="vendor/angular-route/angular-route.js"></script>
 <script src="/node_modules/angular-jwt/dist/angular-jwt.js"></script>
 <script src="/node_modules/angular-cookies/angular-cookies.js"></script>
 <script src="/node_modules/satellizer/dist/satellizer.min.js"></script>
 <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="/node_modules/angularjs-toaster/toaster.js"></script>
+<script src="/node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
+<!-- Angular dependencies -->
 <script src="app.js"></script>
-<script src="components/directive-navbar/navbar.js"></script>
-<script src="components/user/auth-factory.js"></script>
+<script src="components/directive-navbar/serverError.js"></script>
+<script src="components/directive-navbar/navbar-dir.js"></script>
+<script src="components/directive-navbar/navbar-con.js"></script>
+<script src="components/.services/api.js"></script>
 <script src="components/user/cookie-factory.js"></script>
 <script src="components/user/signup/signup.js"></script>
 <script src="components/user/signinout/signinout.js"></script>
 <script src="components/user/profile/profile.js"></script>
+<script src="components/blog/blog.js"></script>
 </body>

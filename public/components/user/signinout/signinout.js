@@ -1,40 +1,52 @@
 angular.module('app').controller('SigninoutController', SigninoutController);
 
-function SigninoutController($auth, $http, $scope, $location, AuthFactory, cookieFactory, jwtHelper, toaster) {
+function SigninoutController($auth, API, $window, $scope, $rootScope, $location, jwtHelper, toaster) {
 
-    $scope.instagramSignin = function(provider) {
-        $auth.authenticate(provider).then(function(response){
-            AuthFactory.isLoggedIn = true;
+if (!$rootScope.currentUser) {
+    $rootScope.currentUser = {};
+    $rootScope.currentUser.fullName = "no name";
+}
+    $scope.isLoggedIn = function () {//console.log("is logged in?" , ($window.localStorage.currentUser ? true : false));
+        return ($window.localStorage.currentUser ? true : false);
+    },
 
-            var user            = response.data.user,
-                token           = response.data.token,
-                decoded         = jwtHelper.decodeToken(token);
-            cookieFactory.setCookieData(user.displayName, user._id, token);
-            toaster.pop('success', "", "Welcome back " + user.displayName);console.log("path!!: ", $location.path());
-            $location.path('/');
-        });
+    $scope.getUserName = function () {//console.log("name: ", JSON.parse($window.localStorage.currentUser).fullName);
+        return $rootScope.currentUser.fullName;
     }
+    $scope.instagramLogin = function () {
+        linkToAPI('instagram');
+    };
+    $scope.signin = function () {
 
-    $scope.isSignedIn = function() {
-        if (cookieFactory.getUserName() == "" || cookieFactory.getUserName() == undefined) {
-            return false;
-        } else {
-            return true;
+        var user = {
+            email: this.email,
+            password: this.password
         }
-    }
+        $auth.login({email: $scope.email, password: $scope.password})
+            .then(function (response) {
+                console.log("normal login: ", response);
+                $window.localStorage.currentUser = JSON.stringify(response.data.user);
+                $rootScope.currentUser = JSON.parse($window.localStorage.currentUser);
+                toaster.pop('success', "", "Welcome back, " + $rootScope.currentUser.fullName);
+                $location.path('/');
+            })
+            .catch(function(err) {
+                toaster.pop("error", "Login Error", err.data.message.email);
+            })
+    };
 
-    $scope.getUsername = function() {
+    $scope.logOut = function () {
+        $auth.logout();
+        $window.localStorage.clear();
+        $rootScope.currentUser = null;
+    };
 
-        return cookieFactory.getUserName();
-    }
+    $scope.getUsername = function () {
+        return $rootScope.currentUser.displayName;
+    };
 
-    $scope.getUserId = function() {
-
-        return cookieFactory.getId();
-    }
-
-    $scope.isActiveTab = function(url) {
+    $scope.isActiveTab = function (url) {
         var currentPath = $location.path().split('/')[1];
         return (url === currentPath ? 'active' : '');
-    }
+    };
 }
