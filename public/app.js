@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ngResource', 'ngRoute', 'angularCSS', 'angular-jwt', 'ngCookies', 'toaster', 'satellizer']);
+var app = angular.module('app', ['ngResource', 'ngRoute', 'ngFileUpload', 'angularCSS', 'angular-jwt', 'ngCookies', 'toaster', 'satellizer']);
 
 app.config(function($routeProvider, $authProvider) {
 
@@ -36,8 +36,15 @@ app.config(function($routeProvider, $authProvider) {
             templateUrl: 'components/user/profile/profile.html',
             controller: ProfileController,
         })
+        .when('/blog/index', {
+            css: 'components/blog/blog.css',
+            templateUrl: 'components/blog/index.html',
+            controller: BlogController,
+        })
         .when('/blog/new', {
-            templateUrl: 'components/user/'
+            css: 'components/blog/new.css',
+            templateUrl: 'components/blog/new.html',
+            controller: BlogController,
         })
     ;
 }).run(function($rootScope, $window, $auth) {console.log("authenticated? ", $auth.isAuthenticated());

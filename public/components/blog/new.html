@@ -1,0 +1,182 @@
+<div id="masthead">
+	<div class="container">
+		<h1 style="text-align: center">New Post</h1>
+	</div>
+</div>
+<div class="container">
+	<div class="col-md-12">
+		<div id="myCarousel" class="carousel slide" data-interval="false">
+
+			<!-- Carousel items -->
+			<div class="carousel-inner well" style="background-color: darkseagreen" data-interval="false">
+				<div class="item active">
+					<div class="row">
+						<div class="col-sm-3" ng-repeat="photo in recentPhotos">
+							<a href="#x"><img ng-src="{{photo.images.standard_resolution.url}}" alt="Image"
+																class="img-responsive"></a>
+						</div>
+					</div>
+					<!--/row-->
+				</div>
+				<!--/item-->
+				<div class="item" ng-show="$index > 4">
+					<div class="row">
+						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
+																																			class="img-responsive"></a>
+						</div>
+						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
+																																			class="img-responsive"></a>
+						</div>
+						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
+																																			class="img-responsive"></a>
+						</div>
+						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
+																																			class="img-responsive"></a>
+						</div>
+					</div>
+					<!--/row-->
+				</div>
+				<!--/item-->
+				<div class="item" ng-show="$index > 8">
+					<div class="row">
+						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
+																																			class="img-responsive"></a>
+						</div>
+						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
+																																			class="img-responsive"></a>
+						</div>
+						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
+																																			class="img-responsive"></a>
+						</div>
+						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
+																																			class="img-responsive"></a>
+						</div>
+					</div>
+					<!--/row-->
+				</div>
+				<!--/item-->
+			</div>
+			<span data-target="#myCarousel" class="left carousel-control" data-slide="prev">‹</span>
+			<span class="right carousel-control" data-target="#myCarousel" data-slide="next">›</span>
+		</div>
+		<!--/myCarousel-->
+		<!--/well-->
+	</div>
+</div>
+
+<div id="add_button" style="position:fixed; left:95%; z-index:2">
+	<a><i class="fa fa-plus-square fa-3x" aria-hidden="true"></i></a>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="row">
+				<div class="col-lg-12">
+					<input class="form-group input-lg" type="text" style="width: 100%;height:100px;font-size:50px;"
+								 ng-model="title" placeholder="Title for your post.">
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="row" style="height: 250px; position:relative;">
+		<div class="drop-box col-md-12" ngf-select ngf-drop ng-model="files" ngf-multiple="true"
+				 ngf-drop-available="dropAvailable" style="font-size:30px;position:absolute;">Add Photos
+			here
+		</div>
+		<div>
+			<div class="col-lg-2 col-sm-3 col-xs-6" ng-repeat="photo in chosenFiles">
+				<a title="Image 1">
+					<img class="thumbnail img-responsive" ngf-src="photo">
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4" style="">
+									<textarea class="form-group" rows="6" style="width: 100%;font-size:25px;"
+														ng-model="atmos" placeholder="How was the atmosphere?"></textarea>
+		</div>
+		<div class="col-md-4" style="">
+								<textarea class="form-group" rows="6" style="width: 100%;font-size:25px;"
+													ng-model="food" placeholder="How was the FOOD?"></textarea>
+		</div>
+		<div class="col-md-4" style="">
+								<textarea class="form-group" rows="6" style="width: 100%;font-size:25px;"
+													ng-model="service" placeholder="How was the SERVICE?"></textarea>
+		</div>
+	</div>
+	<button ng-click="formSubmit()" class="btn btn-primary pull-right btnNext">Submit<i
+			class="glyphicon glyphicon-chevron-right"></i></button>
+</div>
+
+<hr>
+
+<div class="container" id="footer">
+	<div class="row">
+		<div class="col col-sm-12">
+
+			<h1>Footer</h1>
+			<div class="btn-group">
+				<a class="btn btn-twitter btn-lg"><i class="icon-twitter icon-large"></i> Twitter</a>
+				<a class="btn btn-facebook btn-lg"><i class="icon-facebook icon-large"></i> Facebook</a>
+				<a class="btn btn-google-plus btn-lg"><i class="icon-google-plus icon-large"></i> Google+</a>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<hr>
+<script>
+	$(document).ready(function () {
+		$('.thumbnail').click(function () {
+			$('.modal-body').empty();
+			var title = $(this).parent('a').attr("title");
+			$('.modal-title').html(title);
+			$($(this).parents('div').html()).appendTo('.modal-body');
+			$('#myModal').modal({show: true});
+		});
+
+		console.log("HMHMMHMH?", angular.element('.well').scope().recentPhotos);
+		var recentPhotos = angular.element('.well').scope().recentPhotos;
+//		for (var i=0; i< recentPhotos.length; i++) {
+//
+//			if (i == 1) {
+//				$(".well").append(
+//						'<div class="carousel-inner well" data-interval="false" data-interval="false">'+
+//						'<div class="item active">' +
+//						'<div class="row">'
+//				)
+//			}
+//			$(".well").append(
+//					'<div class="col-sm-3">' +
+//					'<a href="#x"><img ng-src="{{recemtPhotos[i].images.standard_resolution.url}}" alt="Image" class="img-responsive"></a>'
+//			)
+//			if (i%4 == 0) {
+//			$(".well").append(
+//					'</div>' +
+//					'</div>'
+//			)
+//			}
+//		}
+//		$(".well").append('</div>');
+		var test = 0;
+		$("#add_button").click(function () {
+			if (test < 3) {
+				$("#image_comment").append(
+						'<div class="col-lg-4 preview" style="">' +
+						'<div ng-show="!files[0].$error && files[0]"><img ngf-src="!files[0].$error && files[0]" style="width: 100%; max-height: 215px;"></div>' +
+						'<div ng-hide="!files[0].$error && files[0]"><img src="http://placehold.it/250x250" style="width: 100%; max-height: 215px;"></div>' +
+						'</div>'
+				)
+			}
+			test++;
+		});
+
+	});
+
+
+</script>

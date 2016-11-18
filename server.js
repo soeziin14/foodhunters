@@ -5,7 +5,8 @@ var express             = require('express'),
     cors                = require('cors'),
     bodyParser          = require('body-parser');
 
-var index               = require('./api/routes/index');
+var index               = require('./api/routes/index'),
+    blog                = require('./api/routes/blog');
 
 var app = express();
 mongoose.connect("mongodb://localhost:3000/commensalism");
@@ -21,12 +22,18 @@ app.use(methodOverride("_method"));
 app.use(flash());
 app.use(cors());
 
-//Passport configurations
 app.use(require("express-session")({
     secret: "What can this secret be?",
     resave: false,
     saveUninitialized: false
 }));
+
+app.use(function(req, res, next) {    console.log("headers set");
+    res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "authorization, Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 
 //app.use(function(req, res, next){
@@ -38,5 +45,6 @@ app.use(require("express-session")({
 
 //Routes to pages
 app.use('/', index);
+app.use('/blog', blog);
 
 module.exports = app;
