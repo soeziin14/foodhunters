@@ -28,10 +28,12 @@ app.use(require("express-session")({
     saveUninitialized: false
 }));
 
-app.use(function(req, res, next) {    console.log("headers set");
+app.use(function(req, res, next) {
+    req.headers["Authorization"] = "authorization";
     res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "authorization, Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Request-Headers", "authorization");
     next();
 });
 

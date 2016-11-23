@@ -1,11 +1,17 @@
 angular.module('app').controller('BlogController', BlogController);
 
-function BlogController($auth, $http, API, $rootScope, $window, Upload, $scope, $location, jwtHelper, toaster, $timeout) {
+function BlogController($http, API,$routeParams, $rootScope, Upload, $scope, $location, jwtHelper, toaster, $timeout, blogDataFactory) {
 
     $scope.recentPhotos = $rootScope.photos;
-    $scope.recentPhotosSize = $scope.recentPhotos.length;
-    $scope.chosenFiles = [];console.log("chosen photos: ", $scope.chosenFiles);
+    $scope.chosenFiles = [];
+    $scope.ratings = {
+        atmosphere: 5,
+        food: 5,
+        service: 5,
+        price: 5
+    };
 
+    var counter = 0;
     $scope.$watch('files', function (files) {console.log("files: ", files);
         console.log("chosen photos: ", $scope.chosenFiles);
         if(files && files[0] && !files[0].$error) {
@@ -20,12 +26,12 @@ function BlogController($auth, $http, API, $rootScope, $window, Upload, $scope, 
                 });
                 return;
             }
-            for (var i = 0; i < files.length; i++) {
-                $scope.errorMsg = null;
-                (function (f) {
-                    $scope.upload(f, false);
-                })(files[i]);
-            }
+            //for (var i = 0; i < files.length; i++) {
+            //    $scope.errorMsg = null;
+            //    (function (f) {
+            //        $scope.upload(f, false);
+            //    })(files[i]);
+            //}
         }
     });
 
@@ -34,7 +40,7 @@ function BlogController($auth, $http, API, $rootScope, $window, Upload, $scope, 
             $scope.errorMsg = null;
             (function (f) {
                 $scope.upload(f, false);
-            })(files[i]);
+            })($scope.chosenFiles[i]);
         }
     }
 
@@ -43,45 +49,69 @@ function BlogController($auth, $http, API, $rootScope, $window, Upload, $scope, 
         $scope.uploadUsingUpload(file, resumable);
     };
 
-    $scope.uploadUsingUpload = function (file, resumable) {console.log("upload?");
+    $scope.uploadUsingUpload = function (file, resumable) {
+
         file.upload = Upload.upload({
             url: 'blog/upload',
-            data: {username: $scope.username, file: file}
+            enctype: 'multipart/form-data',
+            data: {username: $rootScope.currentUser.displayName, file: file}
         });
 
         file.upload.then(function (response) {
-            $timeout(function () {
-                file.result = response.data;
-            });
+            console.log("response: ", response);
+            console.log("coutner: ", counter + " ## " + $scope.chosenFiles.length);
+            counter++;
+            //$timeout(function () {
+            //    file.result = response.data;
+            //});
+            if (counter == $scope.chosenFiles.length) {
+                var form = {
+                    title   : $scope.title,
+                    descriptions : {
+                        atmosphere  : $scope.atmos,
+                        food        : $scope.food,
+                        service     : $scope.service,
+                        price       : $scope.price,
+                    },
+                    ratings : $scope.ratings,
+                    author: {
+                        id: $rootScope.currentUser._id,
+                        name: $rootScope.currentUser.fullName
+                    },
+                    photos: response.data.photos,
+                };
+                $http.post('/blog', form).then(function(response){
+
+                    console.log("/blog/new response: ", response);
+                    $location.path('/blog/index');
+                }).catch(function(err) {
+                    console.log("err: ", err);
+                })
+            }
+
         }, function (response) {
             if (response.status > 0)
                 $scope.errorMsg = response.status + ': ' + response.data;
-        }, function (evt) {
             // Math.min is to fix IE which reports 200% sometimes
-            file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+            //file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
         });
 
         file.upload.xhr(function (xhr) {
-            console.log("what?", xhr);
             // xhr.upload.addEventListener('abort', function(){console.log('abort complete')}, false);
         });
     }
 
-    $scope.formSubmit = function() {
+    $scope.loadIndex = function() {
+        blogDataFactory.blogList().then(function(response) {
+            $scope.indexBlogs = response.data.blog;
+            console.log("indexBLogs: ", $scope.indexBlogs);
 
-        var form = {
-            title   : $scope.title,
-            atmos   : $scope.atmos,
-            food    : $scope.food,
-            service : $scope.service
-        };
+        });
+    }
 
-        $http.post('/blog', form).then(function(response){
-
-            console.log("/blog/new response: ", response);
-            $location.path('/blog');
-        }).catch(function(err) {
-                console.log("err: ", err);
+    $scope.show = function() {
+        blogDataFactory.blogShow($routeParams.id).then(function(response){
+            $scope.showBlog = response.data.blog;console.log("$scope:showBlog: ", $scope.showBlog);
         })
     }
 }

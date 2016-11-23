@@ -31,23 +31,7 @@ var restSchema = new Schema ({
         type: Number,
         default: 0
     },
-    restaurant: {
-        id: {
-            type: Schema.Types.ObjectId,
-            ref: 'Restaurant'
-        }
-    },
-    author: {
-        id: {
-            type: Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
-        },
-        name: {
-            type: String,
-            required: true
-        }
-    },
+    staffs: [],
 },
     {
         timestamps: true

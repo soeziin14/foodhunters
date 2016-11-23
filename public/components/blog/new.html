@@ -89,26 +89,35 @@
 		<div>
 			<div class="col-lg-2 col-sm-3 col-xs-6" ng-repeat="photo in chosenFiles">
 				<a title="Image 1">
-					<img class="thumbnail img-responsive" ngf-src="photo">
+					<img class="thumbnail img-responsive" name="uploaded" ngf-src="photo">
 				</a>
 			</div>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-4" style="">
+		<div class="col-md-3" style="">
+			<input-stars max="5" ng-model="ratings.atmosphere" on-star-click=""></input-stars>
+
 									<textarea class="form-group" rows="6" style="width: 100%;font-size:25px;"
-														ng-model="atmos" placeholder="How was the atmosphere?"></textarea>
+														ng-model="atmos" placeholder="How was the atmosphere?" required></textarea>
 		</div>
-		<div class="col-md-4" style="">
+		<div class="col-md-3" style="">
+			<input-stars max="5" ng-model="ratings.food" on-star-click="test()"></input-stars>
 								<textarea class="form-group" rows="6" style="width: 100%;font-size:25px;"
 													ng-model="food" placeholder="How was the FOOD?"></textarea>
 		</div>
-		<div class="col-md-4" style="">
+		<div class="col-md-3" style="">
+			<input-stars max="5" ng-model="ratings.service" on-star-click="test()"></input-stars>
 								<textarea class="form-group" rows="6" style="width: 100%;font-size:25px;"
 													ng-model="service" placeholder="How was the SERVICE?"></textarea>
 		</div>
+		<div class="col-md-3" style="">
+			<input-stars max="5" ng-model="ratings.price" on-star-click="test()"></input-stars>
+								<textarea class="form-group" rows="6" style="width: 100%;font-size:25px;"
+													ng-model="price" placeholder="Bang for the bucks?"></textarea>
+		</div>
 	</div>
-	<button ng-click="formSubmit()" class="btn btn-primary pull-right btnNext">Submit<i
+	<button ng-click="startUpload()" class="btn btn-primary pull-right btnNext">Submit<i
 			class="glyphicon glyphicon-chevron-right"></i></button>
 </div>
 

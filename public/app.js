@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ngResource', 'ngRoute', 'ngFileUpload', 'angularCSS', 'angular-jwt', 'ngCookies', 'toaster', 'satellizer']);
+var app = angular.module('app', ['ngResource', 'ngRoute', 'ngFileUpload', 'angularCSS', 'angular-jwt', 'ngCookies', 'toaster', 'satellizer', 'angular-input-stars']);
 
 app.config(function($routeProvider, $authProvider) {
 
@@ -44,6 +44,11 @@ app.config(function($routeProvider, $authProvider) {
         .when('/blog/new', {
             css: 'components/blog/new.css',
             templateUrl: 'components/blog/new.html',
+            controller: BlogController,
+        })
+        .when('/blog/:id', {
+            css: 'components/blog/new.css',
+            templateUrl: 'components/blog/show.html',
             controller: BlogController,
         })
     ;
