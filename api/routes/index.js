@@ -18,20 +18,7 @@ router
     .route('/auth/instagram')
     .post(userController.linkInstagram);
 
-router.get('/api/feed/:token', function (req, res) {
-    var feedUrl = 'https://api.instagram.com/v1/users/self/media/recent';console.log("param token: ", req.params.token);
-    var params = {access_token: req.params.token}; console.log("user: ", req.user);
-    console.log("feed token:", params.access_token);
-    request.get({url: feedUrl, qs: params, json: true}, function (error, response, body) {
-        if (error) {
-            console.log("Fetch recent media err: ", error);
-        }
-    console.log("what's the boyd? ", body);
-        if (!error && response.statusCode == 200) {
-            res.send(body.data);
-        }
-    });
-});
+router.get('/api/feed/:token', userController.getInstagramUserFeed);
 
 router
     .route('/api/CRUD/:userId')

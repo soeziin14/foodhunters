@@ -1,19 +1,22 @@
 var express = require('express');
 var router = express.Router();
 var blogController = require('../CRUD/blog.js');
-var multiparty = require('connect-multiparty'),
-    multipartyMiddleware = multiparty();
+var multer = require('multer');
 
-/* GET users listing. */
 router
     .route('/')
-    .get(function(req, res, next) {
-      res.send('respond with a resource');
-    })
     .post(blogController.new);
 
 router
     .route('/upload')
-    .post(multipartyMiddleware, blogController.upload);
+    .post(blogController.upload);
+
+router
+    .route('/:user')
+    .get(blogController.getIndexBlogs);
+
+router
+    .route('/:user/:id')
+    .get(blogController.getShowBlog);
 
 module.exports = router;

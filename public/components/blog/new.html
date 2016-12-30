@@ -1,115 +1,57 @@
-<div id="masthead">
-	<div class="container">
-		<h1 style="text-align: center">New Post</h1>
-	</div>
-</div>
-<div class="container">
-	<div class="col-md-12">
-		<div id="myCarousel" class="carousel slide" data-interval="false">
-
-			<!-- Carousel items -->
-			<div class="carousel-inner well" style="background-color: darkseagreen" data-interval="false">
-				<div class="item active">
-					<div class="row">
-						<div class="col-sm-3" ng-repeat="photo in recentPhotos">
-							<a href="#x"><img ng-src="{{photo.images.standard_resolution.url}}" alt="Image"
-																class="img-responsive"></a>
-						</div>
-					</div>
-					<!--/row-->
-				</div>
-				<!--/item-->
-				<div class="item" ng-show="$index > 4">
-					<div class="row">
-						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
-																																			class="img-responsive"></a>
-						</div>
-						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
-																																			class="img-responsive"></a>
-						</div>
-						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
-																																			class="img-responsive"></a>
-						</div>
-						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
-																																			class="img-responsive"></a>
-						</div>
-					</div>
-					<!--/row-->
-				</div>
-				<!--/item-->
-				<div class="item" ng-show="$index > 8">
-					<div class="row">
-						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
-																																			class="img-responsive"></a>
-						</div>
-						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
-																																			class="img-responsive"></a>
-						</div>
-						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
-																																			class="img-responsive"></a>
-						</div>
-						<div class="col-sm-3"><a href="#x" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image"
-																																			class="img-responsive"></a>
-						</div>
-					</div>
-					<!--/row-->
-				</div>
-				<!--/item-->
-			</div>
-			<span data-target="#myCarousel" class="left carousel-control" data-slide="prev">‹</span>
-			<span class="right carousel-control" data-target="#myCarousel" data-slide="next">›</span>
-		</div>
-		<!--/myCarousel-->
-		<!--/well-->
-	</div>
-</div>
-
-<div id="add_button" style="position:fixed; left:95%; z-index:2">
-	<a><i class="fa fa-plus-square fa-3x" aria-hidden="true"></i></a>
-</div>
-
-<div class="container">
-	<div class="row">
-		<div class="col-md-12">
-
-			<div class="row">
-				<div class="col-lg-12">
-					<input class="form-group input-lg" type="text" style="width: 100%;height:100px;font-size:50px;"
-								 ng-model="title" placeholder="Title for your post.">
-				</div>
-			</div>
-
-		</div>
-	</div>
-	<div class="row" style="height: 250px; position:relative;">
-		<div class="drop-box col-md-12" ngf-select ngf-drop ng-model="files" ngf-multiple="true"
-				 ngf-drop-available="dropAvailable" style="font-size:30px;position:absolute;">Add Photos
-			here
-		</div>
-		<div>
-			<div class="col-lg-2 col-sm-3 col-xs-6" ng-repeat="photo in chosenFiles">
+<div class="row" style="margin-top: 50px;" ng-init="getAllValidatedRestaurants()">
+	<div class="col-lg-9" style="padding-left:10%;">
+		<input class="form-group text-center input-lg" type="text" style="width: 100%;height:100px;font-size:50px;"
+					 ng-model="title" placeholder="Title for your post.">
+		<input class="form-group text-center input-md" type="text" style="width: 100%;height:100px;font-size:50px;"
+					 ng-model="restaurant" placeholder="Which restaurant do you want to blog?">
+		<ul class="data-ctrl">
+			<li ng-repeat="i in allRestaurants | searchFor:restaurant">
+				<p>{{i.name}}</p>
+			</li>
+		</ul>
+		<div class="row">
+			<div class="col-lg-3 col-sm-3 col-xs-6" ng-repeat="photo in chosenFiles">
 				<a title="Image 1">
-					<img class="thumbnail img-responsive" ngf-src="photo">
+					<img style="width: 100%; height:150px; min-width: 150px;" class="img-responsive" name="uploaded" ngf-src="photo">
 				</a>
 			</div>
+			<div class="btn btn-primary col-lg-3" ngf-select ngf-drop ng-model="files" ngf-multiple="true"
+					 ngf-drop-available="dropAvailable" style="padding-right: 15px; padding-left:15px;">
+				<span style="width:100%; height:135px;" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-4" style="">
+		<div class="col-md-3" style="">
+			<input-stars max="5" ng-model="ratings.atmosphere" on-star-click=""></input-stars>
+
 									<textarea class="form-group" rows="6" style="width: 100%;font-size:25px;"
-														ng-model="atmos" placeholder="How was the atmosphere?"></textarea>
+														ng-model="atmos" placeholder="How was the atmosphere?" required></textarea>
 		</div>
-		<div class="col-md-4" style="">
+		<div class="col-md-3" style="">
+			<input-stars max="5" ng-model="ratings.food" on-star-click="test()"></input-stars>
 								<textarea class="form-group" rows="6" style="width: 100%;font-size:25px;"
 													ng-model="food" placeholder="How was the FOOD?"></textarea>
 		</div>
-		<div class="col-md-4" style="">
+		<div class="col-md-3" style="">
+			<input-stars max="5" ng-model="ratings.service" on-star-click="test()"></input-stars>
 								<textarea class="form-group" rows="6" style="width: 100%;font-size:25px;"
 													ng-model="service" placeholder="How was the SERVICE?"></textarea>
 		</div>
+		<div class="col-md-3" style="">
+			<input-stars max="5" ng-model="ratings.price" on-star-click="test()"></input-stars>
+								<textarea class="form-group" rows="6" style="width: 100%;font-size:25px;"
+													ng-model="price" placeholder="Bang for the bucks?"></textarea>
+		</div>
+		<button ng-click="startUpload()" class="btn btn-primary pull-right btnNext">Submit<i
+				class="glyphicon glyphicon-chevron-right"></i></button>
 	</div>
-	<button ng-click="formSubmit()" class="btn btn-primary pull-right btnNext">Submit<i
-			class="glyphicon glyphicon-chevron-right"></i></button>
+	<div class="col-lg-3">
+		<h1 class="text-center">Recent...</h1>
+		<ul class="flex-container">
+			<li class="flex-item" ng-repeat="photo in recentPhotos">
+				<img style="width: 100%; height:100%;"ng-src="{{photo.images.standard_resolution.url}}" alt="">
+			</li>
+		</ul>
+	</div>
 </div>
 
 <hr>

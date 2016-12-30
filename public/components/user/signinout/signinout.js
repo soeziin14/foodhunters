@@ -2,17 +2,18 @@ angular.module('app').controller('SigninoutController', SigninoutController);
 
 function SigninoutController($auth, API, $window, $scope, $rootScope, $location, jwtHelper, toaster) {
 
-if (!$rootScope.currentUser) {
-    $rootScope.currentUser = {};
-    $rootScope.currentUser.fullName = "no name";
-}
     $scope.isLoggedIn = function () {//console.log("is logged in?" , ($window.localStorage.currentUser ? true : false));
         return ($window.localStorage.currentUser ? true : false);
-    },
+    };
+
+    $scope.isAdmin = function() {
+        return ($window.localStorage.currentUser.admin ? true: false);
+    };
 
     $scope.getUserName = function () {//console.log("name: ", JSON.parse($window.localStorage.currentUser).fullName);
         return $rootScope.currentUser.fullName;
-    }
+    };
+
     $scope.instagramLogin = function () {
         linkToAPI('instagram');
     };
@@ -30,7 +31,7 @@ if (!$rootScope.currentUser) {
                 toaster.pop('success', "", "Welcome back, " + $rootScope.currentUser.fullName);
                 $location.path('/');
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 toaster.pop("error", "Login Error", err.data.message.email);
             })
     };

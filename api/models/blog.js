@@ -9,9 +9,36 @@ var blogSchema = new Schema ({
         // match: /^([[:alpha:][:space:][:punct:]]{1,100})$/
         //match: /^([\w ,.!?]{1,100})$/
     },
-    description: {
-        type: String,
-        trim: true,
+    ratings: {
+        atmosphere: {
+            type: Number,
+        },
+        food: {
+            type: Number,
+        },
+        service: {
+            type: Number,
+        },
+        price: {
+          type: Number,
+        },
+        total: {
+            type: Number
+        }
+    },
+    descriptions: {
+        atmosphere: {
+            type: String,
+            trim: true,
+        },
+        food: {
+            type: String,
+            trim: true,
+        },
+        service: {
+            type: String,
+            trim: true,
+        }
     },
     comments: [{
         text: {

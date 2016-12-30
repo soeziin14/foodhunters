@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ngResource', 'ngRoute', 'ngFileUpload', 'angularCSS', 'angular-jwt', 'ngCookies', 'toaster', 'satellizer']);
+var app = angular.module('app', ['ngResource', 'ngRoute', 'ngFileUpload', 'angularCSS', 'angular-jwt', 'ngCookies', 'toaster', 'satellizer', 'angular-input-stars']);
 
 app.config(function($routeProvider, $authProvider) {
 
@@ -45,6 +45,20 @@ app.config(function($routeProvider, $authProvider) {
             css: 'components/blog/new.css',
             templateUrl: 'components/blog/new.html',
             controller: BlogController,
+        })
+        .when('/blog/:id', {
+            css: 'components/blog/new.css',
+            templateUrl: 'components/blog/show.html',
+            controller: BlogController,
+        })
+        .when('/restaurant/new', {
+            css: 'components/restaurant/restaurant.css',
+            templateUrl: 'components/restaurant/new.html',
+            controller: RestaurantController,
+        })
+        .when('/admin/validateRestaurants', {
+            templateUrl: 'components/user/admin/validateRestaurants.html',
+            controller: AdminController,
         })
     ;
 }).run(function($rootScope, $window, $auth) {console.log("authenticated? ", $auth.isAuthenticated());

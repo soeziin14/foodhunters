@@ -1,9 +1,10 @@
-var jwt = require('jwt-simple'),
-    moment = require('moment'),
-    bcrypt = require('bcryptjs'),
-    request = require('request'),
-    User = require('../models/user'),
-    authHelper = require('../auth/authHelpers');
+var jwt         = require('jwt-simple'),
+    moment      = require('moment'),
+    bcrypt      = require('bcryptjs'),
+    request     = require('request'),
+    User        = require('../models/user'),
+    Restaurant  = require('../models/restaurant'),
+    authHelper  = require('../auth/authHelpers');
 
 var config = require('../auth/authConfig');
 
@@ -166,5 +167,17 @@ module.exports.getInstagramUser = function (req, res, next) {
 
 module.exports.getInstagramUserFeed = function (req, res, next) {
 
+    var feedUrl = 'https://api.instagram.com/v1/users/self/media/recent';console.log("param token: ", req.params.token);
+    var params = {access_token: req.params.token}; console.log("user: ", req.user);
+    console.log("feed token:", params.access_token);
+    request.get({url: feedUrl, qs: params, json: true}, function (error, response, body) {
+        if (error) {
+            console.log("Fetch recent media err: ", error);
+        }
+        console.log("what's the boyd? ", body);
+        if (!error && response.statusCode == 200) {
+            res.send(body.data);
+        }
+    });
+};
 
-}
