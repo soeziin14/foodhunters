@@ -9,10 +9,16 @@ var restSchema = new Schema ({
         // match: /^([[:alpha:][:space:][:punct:]]{1,100})$/
         //match: /^([\w ,.!?]{1,100})$/
     },
-    description: {
-        type: String,
-        trim: true,
+    address: {
+      street: {type: String,trim: true,},
+      city: {type: String,trim: true,},
+      state: {type: String,trim: true,},
+      country: {type: String,trim: true,}
     },
+    phone: {type: String,trim: true},
+    website: {type: String,trim: true,},
+    email: {type: String,trim: true,},
+    description: {type: String,trim: true,},
     comments: [{
         text: {
             type: String,
@@ -27,11 +33,22 @@ var restSchema = new Schema ({
             name: String
         }
     }],
-    likes: {
-        type: Number,
-        default: 0
-    },
+    likes: {type: Number,default: 0},
     staffs: [],
+    managers: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ],
+    pioneer: {
+        type: String,
+        trim: true,
+    },
+    verified: {
+        type: Boolean,
+        default: false,
+    }
 },
     {
         timestamps: true

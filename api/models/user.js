@@ -1,5 +1,5 @@
 var     mongoose            = require('mongoose'),
-        roles               = 'scouter blogger admin manager'.split(' '),
+        roles               = 'scouter blogger manager'.split(' '),
         bcrypt              = require('bcryptjs'),
         level               = 'Cat Cougar Lion'.split(' ');
 
@@ -48,7 +48,6 @@ var userSchema = new mongoose.Schema({
             ref: "User"
         }
     }],
-
     comments: [{
         id: {
             type: mongoose.Schema.Types.ObjectId,
@@ -67,6 +66,12 @@ var userSchema = new mongoose.Schema({
             ref: "Blog"
         }
     }],
+    managingRestaurants: [{
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Restaurant"
+        }
+    }]
     },
     {
         timestamps: true

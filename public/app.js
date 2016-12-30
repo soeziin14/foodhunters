@@ -51,6 +51,15 @@ app.config(function($routeProvider, $authProvider) {
             templateUrl: 'components/blog/show.html',
             controller: BlogController,
         })
+        .when('/restaurant/new', {
+            css: 'components/restaurant/restaurant.css',
+            templateUrl: 'components/restaurant/new.html',
+            controller: RestaurantController,
+        })
+        .when('/admin/validateRestaurants', {
+            templateUrl: 'components/user/admin/validateRestaurants.html',
+            controller: AdminController,
+        })
     ;
 }).run(function($rootScope, $window, $auth) {console.log("authenticated? ", $auth.isAuthenticated());
     //if ($auth.isAuthenticated()) {console.log("authenticated: ", $auth.isAuthenticated());

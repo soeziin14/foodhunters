@@ -6,7 +6,8 @@ var express             = require('express'),
     bodyParser          = require('body-parser');
 
 var index               = require('./api/routes/index'),
-    blog                = require('./api/routes/blog');
+    blog                = require('./api/routes/blog'),
+    restaurant          = require('./api/routes/restaurant');
 
 var app = express();
 mongoose.connect("mongodb://localhost:3000/commensalism");
@@ -48,5 +49,6 @@ app.use(function(req, res, next) {
 //Routes to pages
 app.use('/', index);
 app.use('/blog', blog);
+app.use('/restaurant', restaurant);
 
 module.exports = app;

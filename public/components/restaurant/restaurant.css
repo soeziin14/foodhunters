@@ -1,0 +1,16 @@
+.header {
+    padding-bottom: 50px;
+}
+
+.new-restaurant{
+    max-width: 500px;
+    min-width: 250px;
+}
+
+.row .city {
+    padding-right: 0px;
+}
+
+.row .state {
+    padding-right: 0px;
+}
