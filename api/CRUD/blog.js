@@ -95,4 +95,15 @@ module.exports.getShowBlog = function(req, res) {
             res.status(200).send({blog:foundBlog});
         }
     })
-}
+};
+
+module.exports.getRecentBlogs = function (req, res){
+    //console.log("count",req.params.count, typeof req.params.count);
+    Blog.find().sort({$natural: -1}).limit(Number(req.params.count)).exec(function(err, blogs){
+        if(err){
+            console.log("getRecentBlogs err: ", err);
+        } else {
+            res.status(200).send({blogs:blogs});
+        }
+    });
+};

@@ -14,9 +14,13 @@ router
 router
     .route('/:user')
     .get(blogController.getIndexBlogs);
-
+router
+    .route('/recent/:count')
+    .get(blogController.getRecentBlogs);
 router
     .route('/:user/:id')
     .get(blogController.getShowBlog);
+
+
 
 module.exports = router;
