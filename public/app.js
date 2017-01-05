@@ -19,7 +19,9 @@ app.config(function($routeProvider, $authProvider) {
 
     $routeProvider
         .when('/', {
+            css:'components/main.css',
             templateUrl: 'components/main.html',
+            controller: MainController,
         })
         .when('/login', {
             css: 'components/user/signinout/login.css',
