@@ -114,7 +114,7 @@ function BlogController($http, API,$routeParams, $rootScope, Upload, $scope, $lo
             $scope.showBlog = response.data.blog;console.log("$scope:showBlog: ", $scope.showBlog);
         })
     }
-    $scope.getAllValidatedRestaurants = function() {
+    $scope.getValidRestaurants = function() {
         $http.get('/restaurant/allValidatedRestaurants').then(function(response) {
             console.log("RESPONSE: ", response);
             $scope.allRestaurants = response.data.restaurants;

@@ -1,7 +1,6 @@
 angular.module('app').controller('RestaurantController', RestaurantController);
 
-function RestaurantController($http, API, $rootScope, $window, $scope, $location, jwtHelper, toaster) {
-
+function RestaurantController($http, $rootScope, $window, $scope, $location, jwtHelper, toaster, restaurantDataFactory, $routeParams) {
     $scope.addRestaurant = function () {
 
         var restaurant = {
@@ -19,14 +18,17 @@ function RestaurantController($http, API, $rootScope, $window, $scope, $location
         }
 
         $http.post('/restaurant/new', restaurant).then(function (response) {
-            console.log("Restaurant new success: ", response);
-            $location.path('/');
+                console.log("Restaurant new success: ", response);
+                $location.path('/');
             })
             .catch(function (err) {
                 console.log("Restaurant new error: ", err);
             });
+    },
+    $scope.restaurant = function(){
+        restaurantDataFactory.getRestaurant($routeParams.id).then(function(response){
+            $scope.showRestaurant = response.data.restaurant;
+        });
     }
-
-
 }
 
