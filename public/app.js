@@ -58,9 +58,14 @@ app.config(function($routeProvider, $authProvider) {
             templateUrl: 'components/restaurant/new.html',
             controller: RestaurantController,
         })
-        .when('/admin/validateRestaurants', {
+        .when('/restaurant/invalid', {
             templateUrl: 'components/user/admin/validateRestaurants.html',
             controller: AdminController,
+        })
+        .when('/restaurant/:id', {
+            css: 'components/restaurant/restaurant.css',
+            templateUrl: 'components/restaurant/show.html',
+            controller: RestaurantController,
         })
     ;
 }).run(function($rootScope, $window, $auth) {console.log("authenticated? ", $auth.isAuthenticated());

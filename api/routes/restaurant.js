@@ -4,18 +4,22 @@ var express = require('express'),
 
 router
     .route('/')
-    .get(restaurantController.getValidateRestaurants);
 
 router
-    .route('/new')
-    .post(restaurantController.newRestaurant);
+    .post('/new',restaurantController.newRestaurant);
 
 router
-    .route('/:id')
-    .put(restaurantController.validateRestaurant);
+    .get('/recent/:count',restaurantController.getRecentRestaurants)
 
 router
-    .route('/allValidatedRestaurants')
-    .get(restaurantController.getAllValidatedRestaurants);
+    .get('/invalid', restaurantController.getInvalidRestaurants)
+    .put('/invalid/:id', restaurantController.validateRestaurant);
+
+router
+    .get('/valid', restaurantController.getValidRestaurants);
+
+router
+    .get('/:id',restaurantController.getRestaurant)
+//.put('/:id',restaurantController.updateRestaurant)
 
 module.exports = router;

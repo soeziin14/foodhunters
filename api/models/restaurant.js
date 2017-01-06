@@ -41,10 +41,21 @@ var restSchema = new Schema ({
             ref: 'User'
         }
     ],
+    menu:{
+        appetizer: [],
+        sides: [],
+        drinks: [],
+        main: [],
+        courses: [],
+        deserts: [],
+    },
+    photos:[],
     pioneer: {
         type: String,
         trim: true,
     },
+    rating:{type: Number},
+    totalReviews:{type: Number},
     verified: {
         type: Boolean,
         default: false,
