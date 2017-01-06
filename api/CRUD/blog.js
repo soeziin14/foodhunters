@@ -1,11 +1,13 @@
 var jwt = require('jwt-simple'),
     moment = require('moment'),
     bcrypt = require('bcryptjs'),
+    crypto = require('crypto'),
     request = require('request'),
     User = require('../models/user'),
     Blog = require('../models/blog'),
     multer = require('multer'),
     mkdirp = require('mkdirp'),
+    aws = require('../aws/aws'),
     authHelper = require('../auth/authHelpers');
 
 var rootMulterPath = './public/images/uploads/',
@@ -60,6 +62,55 @@ module.exports.new = function (req, res) {
     });
 };
 var photos = [];
+
+var s3Url = 'http://' + 'commensalism.uploads' + '.s3' + '.amazonaws.com';
+module.exports.uploadS3 = function(req, res){
+    var request = req.body;
+    var fileName = request.filename
+    var path = aws.BUCKET + fileName;
+    var readType = 'private';
+
+    var expiration = moment().add(5, 'm').toDate(); //15 minutes
+
+    var s3Policy = {
+        'expiration': expiration,
+        'conditions': [{
+            'bucket': aws.BUCKET
+        },
+            ['starts-with', '$key', path],
+            {
+                'acl': readType
+            },
+            {
+                'success_action_status': '201'
+            },
+            ['starts-with', '$Content-Type', request.type],
+            ['content-length-range', 2048, 10485760], //min and max
+        ]
+    };
+
+    var stringPolicy = JSON.stringify(s3Policy);
+    var base64Policy = new Buffer(stringPolicy, 'utf-8').toString('base64');
+
+    // sign policy
+    var signature = crypto.createHmac('sha1', aws.SECRET_KEY)
+        .update(new Buffer(base64Policy, 'utf-8')).digest('base64');
+
+    var credentials = {
+        url: s3Url,
+        fields: {
+            key: path,
+            AWSAccessKeyId: aws.ACCESS_KEY,
+            acl: readType,
+            policy: base64Policy,
+            signature: signature,
+            'Content-Type': request.type,
+            success_action_status: 201
+        }
+    };
+    res.jsonp(credentials);
+};
+
 module.exports.upload = function (req, res) {
 
     upload(req, res, function(err) {

@@ -8,6 +8,8 @@ router
     .post(blogController.new);
 
 router
+    .post('/signing', blogController.uploadS3);
+router
     .route('/upload')
     .post(blogController.upload);
 
