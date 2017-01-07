@@ -10,7 +10,7 @@ function BlogController($http, API,$routeParams, $rootScope, Upload, $scope, $lo
         service: 5,
         price: 5
     };
-
+    $scope.timestamp = null;
     var counter = 0;
     $scope.$watch('files', function (files) {console.log("files: ", files);
         console.log("chosen photos: ", $scope.chosenFiles);
@@ -36,6 +36,7 @@ function BlogController($http, API,$routeParams, $rootScope, Upload, $scope, $lo
     });
 
     $scope.startUpload = function() {
+        $scope.timestamp = Date.now();
         for (var i = 0; i < $scope.chosenFiles.length; i++) {
             $scope.errorMsg = null;
             (function (f) {
@@ -67,8 +68,9 @@ function BlogController($http, API,$routeParams, $rootScope, Upload, $scope, $lo
                     }).progress(function(evt) {
                         console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total));
                     }).success(function(data, status, headers, config) {
+                        console.log($rootScope.currentUser);
                         // file is uploaded successfully
-                        console.log('file ' + config.file.name + 'is uploaded successfully. Response: ' + data.key);
+                        console.log('file ' + config.file.name + 'is uploaded successfully. Response: ' + data);
                         var form = {
                             title   : $scope.title,
                             descriptions : {
@@ -79,10 +81,11 @@ function BlogController($http, API,$routeParams, $rootScope, Upload, $scope, $lo
                             },
                             ratings : $scope.ratings,
                             author: {
-                                id: $rootScope.currentUser._id,
+                                id: $rootScope.currentUser.displayName,
                                 name: $rootScope.currentUser.fullName
                             },
                             photos: config.file.name,
+                            timestamp: $scope.timestamp,
                         };
                         $http.post('/blog', form).then(function(response){
 

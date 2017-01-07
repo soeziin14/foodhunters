@@ -8,8 +8,15 @@ var jwt = require('jwt-simple'),
     multer = require('multer'),
     mkdirp = require('mkdirp'),
     aws = require('../aws/aws'),
+    AWS = require('aws-sdk'),
     authHelper = require('../auth/authHelpers');
 
+AWS.config.update({
+    region: "us-east-1",
+    endpoint: "dynamodb.us-east-1.amazonaws.com",
+    accessKeyId: aws.ACCESS_KEY,
+    secretAccessKey: aws.SECRET_KEY,
+});
 var rootMulterPath = './public/images/uploads/',
     multerPath = '';
 
@@ -33,34 +40,73 @@ var upload = multer({
 function setMulterPath(username) {
     multerPath = rootMulterPath + username;
 }
-
 module.exports.new = function (req, res) {
-    console.log('form: ', req.body);
-    console.log("photos in new: ", photos);
-    req.body.photos.forEach(function(current, index) {
-        req.body.photos[index] = current.substring("./public".length);
-        //photos[index] = current;
-        console.log("current:" + current + " DD " + req.body.photos[index]);
-    });
-    var form = req.body;
-    console.log("form.photos: ", form.photos);
-    var blog = {
-        title: form.title,
-        ratings: form.ratings,
-        descriptions : form.descriptions,
-        author: form.author,
-        photos: form.photos,
-    };
 
-    Blog.create(blog, function(err, newBlog) {
-        if(err){
-            console.log(err);
-        } else {
-            //console.log(newBlog);
-            res.status(200).send();
-        }
-    });
+    var form = req.body;
+    console.log("form.photos: ", form);
+
+    var table       = "Blog",
+        author      = form.author.id,
+        timestamp   = form.timestamp;
+
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var params = {
+            TableName:table,
+            Key:{
+                "author": author,
+                "timestamp": timestamp,
+            },
+            UpdateExpression:
+                              "set title = if_not_exists(title, :title),"+
+                              "descriptions = if_not_exists(descriptions, :descriptions),"+
+                              "ratings = if_not_exists(ratings, :ratings)"+
+                              "add #photos :photos",
+            ExpressionAttributeNames:{
+                "#photos": "photos",
+            },
+            ExpressionAttributeValues: {
+                ":title": form.title,
+                ":descriptions": form.descriptions,
+                ":ratings": form.ratings,
+                ":photos": docClient.createSet([form.photos]),
+            }
+        };
+        docClient.update(params, function(err, data) {
+            if (err) {
+                console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+            } else {
+                console.log("Added item:", JSON.stringify(data, null, 2));
+            }
+        });
+    res.status(200).send({success: true});
 };
+//module.exports.new = function (req, res) {
+//    console.log('form: ', req.body);
+//    console.log("photos in new: ", photos);
+//    req.body.photos.forEach(function(current, index) {
+//        req.body.photos[index] = current.substring("./public".length);
+//        //photos[index] = current;
+//        console.log("current:" + current + " DD " + req.body.photos[index]);
+//    });
+//    var form = req.body;
+//    console.log("form.photos: ", form.photos);
+//    var blog = {
+//        title: form.title,
+//        ratings: form.ratings,
+//        descriptions : form.descriptions,
+//        author: form.author,
+//        photos: form.photos,
+//    };
+//
+//    Blog.create(blog, function(err, newBlog) {
+//        if(err){
+//            console.log(err);
+//        } else {
+//            //console.log(newBlog);
+//            res.status(200).send();
+//        }
+//    });
+//};
 var photos = [];
 
 var s3Url = 'http://' + 'commensalism.uploads' + '.s3' + '.amazonaws.com';
