@@ -10,7 +10,7 @@ function BlogController($http, API,$routeParams, $rootScope, Upload, $scope, $lo
         service: 5,
         price: 5
     };
-
+    $scope.timestamp = null;
     var counter = 0;
     $scope.$watch('files', function (files) {console.log("files: ", files);
         console.log("chosen photos: ", $scope.chosenFiles);
@@ -36,14 +36,74 @@ function BlogController($http, API,$routeParams, $rootScope, Upload, $scope, $lo
     });
 
     $scope.startUpload = function() {
+        $scope.timestamp = Date.now();
         for (var i = 0; i < $scope.chosenFiles.length; i++) {
             $scope.errorMsg = null;
             (function (f) {
-                $scope.upload(f, false);
+                $scope.uploadS3(f, false);
             })($scope.chosenFiles[i]);
         }
     }
 
+    $scope.uploadS3 = function(file, resumable){
+        if (file) {
+            var filename = file.name;
+            var type = file.type;
+            var query = {
+                filename: filename,
+                type: type
+            };
+            $http.post('/blog/signing', query)
+                .success(function(result) {
+                    Upload.upload({
+                        url: result.url, //s3Url
+                        transformRequest: function(data, headersGetter) {
+                            var headers = headersGetter();
+                            delete headers.Authorization;
+                            return data;
+                        },
+                        fields: result.fields, //credentials
+                        method: 'POST',
+                        file: file
+                    }).progress(function(evt) {
+                        console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total));
+                    }).success(function(data, status, headers, config) {
+                        console.log($rootScope.currentUser);
+                        // file is uploaded successfully
+                        console.log('file ' + config.file.name + 'is uploaded successfully. Response: ' + data);
+                        var form = {
+                            title   : $scope.title,
+                            descriptions : {
+                                atmosphere  : $scope.atmos,
+                                food        : $scope.food,
+                                service     : $scope.service,
+                                price       : $scope.price,
+                            },
+                            ratings : $scope.ratings,
+                            author: {
+                                id: $rootScope.currentUser.displayName,
+                                name: $rootScope.currentUser.fullName
+                            },
+                            photos: config.file.name,
+                            timestamp: $scope.timestamp,
+                        };
+                        $http.post('/blog', form).then(function(response){
+
+                            console.log("/blog/new response: ", response);
+                            $location.path('/blog/index');
+                        }).catch(function(err) {
+                            console.log("err: ", err);
+                        })
+                    }).error(function() {
+
+                    });
+                })
+                .error(function(data, status, headers, config) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                });
+        }
+    }
     $scope.upload = function (file, resumable) {
         $scope.errorMsg = null;
         $scope.uploadUsingUpload(file, resumable);
