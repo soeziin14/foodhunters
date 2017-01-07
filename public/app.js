@@ -38,7 +38,7 @@ app.config(function($routeProvider, $authProvider) {
             templateUrl: 'components/user/profile/profile.html',
             controller: ProfileController,
         })
-        .when('/blog/index', {
+        .when('/blog/:user', {
             css: 'components/blog/blog.css',
             templateUrl: 'components/blog/index.html',
             controller: BlogController,
@@ -48,7 +48,7 @@ app.config(function($routeProvider, $authProvider) {
             templateUrl: 'components/blog/new.html',
             controller: BlogController,
         })
-        .when('/blog/:id', {
+        .when('/blog/:user/:id', {
             css: 'components/blog/new.css',
             templateUrl: 'components/blog/show.html',
             controller: BlogController,

@@ -6,21 +6,18 @@ function blogDataFactory($http, $rootScope){
     var oneBlog;
 
     return {
-        blogList: blogList,
-        blogShow: blogShow,
-        recentBlogs: recentBlogs,
+        getAllUserBlogs: getAllUserBlogs,
+        getOneUserBlog: getOneUserBlog,
+        getRecentCountBlogs: getRecentCountBlogs,
     }
 
-    function blogList() {
-        //if( blogs) {console.log("yes blogs");
-        //    return blogs;
-        //}
-        return $http.get('/blog/'+$rootScope.currentUser._id);
+    function getAllUserBlogs() {
+        return $http.get('/blogs/'+$rootScope.currentUser._id);
     }
-    function recentBlogs(){
-        return $http.get('/blog/recent/'+9);
+    function getRecentCountBlogs(){
+        return $http.get('/blogs/recent/'+9);
     }
-    function blogShow(id) {
-        return $http.get('/blog/'+$rootScope.currentUser._id+'/'+id);
+    function getOneUserBlog(id) {
+        return $http.get('/blogs/'+$rootScope.currentUser._id+'/'+id);
     }
 }

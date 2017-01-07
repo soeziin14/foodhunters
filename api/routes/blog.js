@@ -4,25 +4,20 @@ var blogController = require('../CRUD/blog.js');
 var multer = require('multer');
 
 router
-    .route('/')
+    .route('/new')
     .post(blogController.new);
-
 router
-    .post('/signing', blogController.uploadS3);
-router
-    .route('/upload')
-    .post(blogController.upload);
+    .post('/uploads3', blogController.uploadS3);
 
 router
     .route('/:user')
-    .get(blogController.getIndexBlogs);
+    .get(blogController.getAllUserBlogs);
 router
     .route('/recent/:count')
-    .get(blogController.getRecentBlogs);
+    .get(blogController.getRecentCountBlogs);
 router
     .route('/:user/:id')
-    .get(blogController.getShowBlog);
-
-
+    .get(blogController.getOneUserBlog)
+    .put(blogController.putOneUserBlog);
 
 module.exports = router;

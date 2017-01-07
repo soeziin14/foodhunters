@@ -48,7 +48,7 @@ app.use(function(req, res, next) {
 
 //Routes to pages
 app.use('/', index);
-app.use('/blog', blog);
-app.use('/restaurant', restaurant);
+app.use('/blogs', blog);
+app.use('/restaurants', restaurant);
 
 module.exports = app;

@@ -21,7 +21,7 @@
 <div id="new-button" style="position:fixed; left:90%; z-index:2">
 	<a href="#/blog/new"><i class="fa fa-plus-square fa-3x" aria-hidden="true"></i></a>
 </div>
-<div class="container" ng-controller="BlogController" ng-init="loadIndex()">
+<div class="container" ng-controller="BlogController" ng-init="getAllUserBlogs(); getUserName();">
 
 	<div class="row">
 
@@ -29,7 +29,7 @@
 
 			<div class="panel">
 				<div class="panel-body">
-					<div class="row" ng-repeat="blog in indexBlogs">
+					<div class="row" ng-repeat="blog in allUserBlogs">
 						<br>
 						<div class="col-md-2 col-sm-3 text-center">
 							<a class="story-img" href="#">
@@ -42,7 +42,7 @@
 								<div class="col-xs-9">
 									<p>{{blog.descriptions.food}}</p>
 									<p class="lead">
-										<a href="#/blog/{{blog._id}}"><button class="btn btn-default">Read More</button></a>
+										<a href="#/blog/{{userName}}/{{blog._id}}"><button class="btn btn-default">Read More</button></a>
 									</p>
 									<p class="pull-right"><span class="label label-default">keyword</span> <span class="label label-default">tag</span> <span class="label label-default">post</span></p>
 									<ul class="list-inline"><li><a href="#">2 Days Ago</a></li><li><a href="#"><i class="glyphicon glyphicon-comment"></i> 4 Comments</a></li><li><a href="#"><i class="glyphicon glyphicon-share"></i> 34 Shares</a></li></ul>
