@@ -3,3 +3,4 @@
 karma.conf.js
 node_modules/
 public/vendor/*
+api/aws/*
