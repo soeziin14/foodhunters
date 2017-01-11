@@ -1,7 +1,7 @@
 angular.module('app').controller('MainController', MainController);
 
 function MainController(blogDataFactory, restaurantDataFactory, $scope){
-    blogDataFactory.recentBlogs().then(function(response){
+    blogDataFactory.getRecentCountBlogs().then(function(response){
         $scope.recentBlogs = response.data.blogs;
     });
 

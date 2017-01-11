@@ -1,5 +1,5 @@
 angular.module('app').factory("userDataFactory", [
-    "$cookies", function($auth, $window) {
+    "$cookies", function($auth, $rootScope) {
         var fullName    = null,
             displayName = null,
             accessToken = null,
@@ -16,7 +16,8 @@ angular.module('app').factory("userDataFactory", [
                 loggedIn    = isloggedin;
             },
             getUserName: function() {
-                return fullName;
+                console.log("UD currentUser:", $rootScope.currentUser.displayName);
+                return $rootScope.currentUser.displayName;
             },
             getId: function() {
                 return displayName
